@@ -59,6 +59,13 @@ img {
 ::view-transition-new(root) {
   animation-name: vt-in;
 }
+/* Hero photo: crossfades between universes, morphs from a home card. Cover keeps
+   it from stretching when the two boxes have different proportions. */
+::view-transition-old(hero-photo),
+::view-transition-new(hero-photo) {
+  height: 100%;
+  object-fit: cover;
+}
 ::view-transition-group(*) {
   animation-duration: 1s;
   animation-timing-function: var(--ease-in-out);
@@ -578,15 +585,6 @@ html[data-home='true'] .pill {
   pointer-events: none;
   animation: glyph-in 1.6s var(--ease-out) 0.5s both;
   mix-blend-mode: soft-light;
-}
-.hero-photo .caption {
-  position: absolute;
-  left: 32px;
-  bottom: 28px;
-  margin: 0;
-  padding: 6px 12px;
-  background-color: var(--card);
-  color: var(--ink);
 }
 
 .gallery {
