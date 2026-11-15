@@ -291,10 +291,6 @@ html[data-home='true'] .pill {
   text-decoration: none;
   transition: flex-grow 0.9s var(--ease-out);
 }
-.card:hover,
-.card:focus-visible {
-  flex-grow: 2.6;
-}
 .card-top {
   position: relative;
   flex: 1 1 auto;
@@ -313,11 +309,6 @@ html[data-home='true'] .pill {
   transform: translateX(-50%) scale(1.03);
   transition: opacity 0.7s ease, transform 0.9s var(--ease-out);
 }
-.card:hover .card-preview,
-.card:focus-visible .card-preview {
-  opacity: 1;
-  transform: translateX(-50%);
-}
 .card-mark {
   position: absolute;
   inset: 0;
@@ -328,11 +319,6 @@ html[data-home='true'] .pill {
   line-height: 1;
   opacity: 0.85;
   transition: opacity 0.5s ease, transform 0.9s var(--ease-out);
-}
-.card:hover .card-mark,
-.card:focus-visible .card-mark {
-  opacity: 0;
-  transform: translateY(-16px);
 }
 .card-meta {
   position: absolute;
@@ -375,11 +361,29 @@ html[data-home='true'] .pill {
   transform: translateY(10px);
   transition: opacity 0.5s ease, transform 0.7s var(--ease-out);
 }
-.card:hover .card-more,
-.card:focus-visible .card-more {
-  opacity: 1;
-  transform: none;
-  transition-delay: 0.25s;
+/* Hover/focus reveal: desktop only. On tablet and phone every card already shows
+   its preview, and a tap must not trigger the desktop animation. */
+@media (min-width: 861px) {
+  .card:hover,
+  .card:focus-visible {
+    flex-grow: 2.6;
+  }
+  .card:hover .card-preview,
+  .card:focus-visible .card-preview {
+    opacity: 1;
+    transform: translateX(-50%);
+  }
+  .card:hover .card-mark,
+  .card:focus-visible .card-mark {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  .card:hover .card-more,
+  .card:focus-visible .card-more {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.25s;
+  }
 }
 .card-tagline {
   max-width: 34ch;
@@ -1099,9 +1103,11 @@ html:has(.lightbox[open]) {
     height: 50%;
     border-bottom: 1px solid var(--line);
   }
-  .card:hover,
-  .card:focus-visible {
-    flex-grow: 1;
+  .card,
+  .card-preview,
+  .card-mark,
+  .card-more {
+    transition: none;
   }
   .card-preview {
     left: 0;
