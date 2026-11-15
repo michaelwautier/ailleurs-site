@@ -30,6 +30,8 @@ export type House = {
   nativeFont: string;
   glyphItalic: boolean;
   name: string;
+  /** Short name with article, used in calls to action ("Réserver la case"). */
+  shortName: string;
   tagline: string;
   statement: string;
   description: string;
@@ -49,6 +51,8 @@ export type Stay = {
   minNights: number;
   commune: string;
   address: string;
+  /** Place on the stylised map (see src/components/LocationMap.astro). */
+  place: 'town' | 'colimacons' | 'chaloupe' | 'piton';
   nearby: { key: string; value: string }[];
 };
 
@@ -105,6 +109,7 @@ export const houses: House[] = [
     nativeFont: "'Shippori Mincho', serif",
     glyphItalic: false,
     name: 'Maison Kumo',
+    shortName: 'la maison',
     tagline: 'Un ryokan miniature sous les tropiques.',
     statement: 'Petite maison, grand calme : bois clair, papier, eau.',
     description:
@@ -124,7 +129,7 @@ export const houses: House[] = [
     ],
     stay: {
       guests: 2, bedrooms: 1, bed: 'Futon 160', bathrooms: 1, surface: 32, price: 165, minNights: 2,
-      commune: 'Saint-Leu', address: '12 chemin des Filaos, La Chaloupe — 97416 Saint-Leu',
+      commune: 'Saint-Leu', address: '12 chemin des Filaos, La Chaloupe — 97416 Saint-Leu', place: 'chaloupe',
       nearby: [
         { key: 'Lagon de Saint-Leu', value: '10 min' },
         { key: 'Centre de Saint-Leu, commerces', value: '10 min' },
@@ -149,6 +154,7 @@ export const houses: House[] = [
     nativeFont: "'Fraunces', serif",
     glyphItalic: true,
     name: 'Case Vétiver',
+    shortName: 'la case',
     tagline: 'Une petite case créole, sa varangue et son bassin.',
     statement: "On y vit dehors autant que dedans, à l'ombre des letchis.",
     description:
@@ -168,7 +174,7 @@ export const houses: House[] = [
     ],
     stay: {
       guests: 2, bedrooms: 1, bed: 'Lit 160', bathrooms: 1, surface: 38, price: 145, minNights: 2,
-      commune: 'Saint-Leu', address: '4 allée des Letchis, Piton Saint-Leu — 97424 Saint-Leu',
+      commune: 'Saint-Leu', address: '4 allée des Letchis, Piton Saint-Leu — 97424 Saint-Leu', place: 'piton',
       nearby: [
         { key: 'Lagon de Saint-Leu', value: '12 min' },
         { key: 'Marché de Piton Saint-Leu', value: '3 min' },
@@ -193,6 +199,7 @@ export const houses: House[] = [
     nativeFont: "'Noto Naskh Arabic', serif",
     glyphItalic: false,
     name: 'Riad Zellij',
+    shortName: 'le riad',
     tagline: 'Un mini-riad, son patio et son bassin.',
     statement: 'Zelliges, tadelakt et lumière filtrée autour d’un petit patio.',
     description:
@@ -212,7 +219,7 @@ export const houses: House[] = [
     ],
     stay: {
       guests: 2, bedrooms: 1, bed: 'Lit 160', bathrooms: 1, surface: 36, price: 155, minNights: 2,
-      commune: 'Saint-Leu', address: '27 rue des Bougainvilliers — 97436 Saint-Leu',
+      commune: 'Saint-Leu', address: '27 rue des Bougainvilliers — 97436 Saint-Leu', place: 'town',
       nearby: [
         { key: 'Plage et lagon de Saint-Leu', value: '4 min' },
         { key: 'Centre de Saint-Leu, commerces', value: '3 min' },
@@ -238,6 +245,7 @@ export const houses: House[] = [
     nativeFont: "'Noto Sans Balinese', sans-serif",
     glyphItalic: false,
     name: 'Villa Sawah',
+    shortName: 'la villa',
     tagline: 'Une villa ouverte, entre canopée et bassin.',
     statement: 'Bois, pierre volcanique et eau : tout est ouvert, tout invite à ralentir.',
     description:
@@ -257,7 +265,7 @@ export const houses: House[] = [
     ],
     stay: {
       guests: 2, bedrooms: 1, bed: 'Lit 180', bathrooms: 1, surface: 40, price: 175, minNights: 2,
-      commune: 'Saint-Leu', address: '9 chemin des Bambous, Les Colimaçons — 97436 Saint-Leu',
+      commune: 'Saint-Leu', address: '9 chemin des Bambous, Les Colimaçons — 97436 Saint-Leu', place: 'colimacons',
       nearby: [
         { key: 'Jardin botanique de Mascarin', value: '5 min' },
         { key: 'Lagon de Saint-Leu', value: '15 min' },
