@@ -31,6 +31,22 @@ const { title, description = 'Quatre petites maisons à univers à La Réunion :
   <body>
     <slot />
     <script>
+      // The view transition snapshots the new page right after the swap. If its hero
+      // photo is not loaded yet, the old photo fades into an empty box and the new one
+      // pops in afterwards. Load and decode it first (capped, so a slow network never
+      // blocks navigation for long).
+      document.addEventListener('astro:before-preparation', (event) => {
+        const load = event.loader;
+        event.loader = async () => {
+          await load();
+          const src = event.newDocument?.querySelector('.hero-photo img')?.getAttribute('src');
+          if (!src) return;
+          const img = new Image();
+          img.src = new URL(src, event.to).href;
+          await Promise.race([img.decode().catch(() => {}), new Promise((r) => setTimeout(r, 1500))]);
+        };
+      });
+
       // Slow, eased scroll for in-page anchors (native smooth scroll is too quick).
       const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 
