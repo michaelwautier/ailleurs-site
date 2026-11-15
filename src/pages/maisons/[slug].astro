@@ -109,7 +109,7 @@ const facts = houseFacts(stay);
         <div class="stack">
           <p class="eyebrow">04 — Réserver</p>
           <h2 class="display-2">Séjourner à {house.name}</h2>
-          <p class="body-text muted">À partir de {stay.price} € / nuit · minimum {stay.minNights} nuits · jusqu'à {stay.guests} voyageurs.</p>
+          <p class="body-text muted">À partir de {stay.price} € / nuit{stay.minNights > 1 && ` · minimum ${stay.minNights} nuits`} · jusqu'à {stay.guests} voyageurs.</p>
         </div>
         <BookingForm houseName={house.name} price={stay.price} maxGuests={stay.guests} minNights={stay.minNights} />
       </div>
