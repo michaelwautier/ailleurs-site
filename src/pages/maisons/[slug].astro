@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import Header from '../../components/Header.astro';
 import Photo from '../../components/Photo.astro';
 import Gallery from '../../components/Gallery.astro';
+import LocationMap from '../../components/LocationMap.astro';
 import BookingForm from '../../components/BookingForm.astro';
 import { houses, houseFacts, contact, nextHouse, themeStyle, type House } from '../../data/houses';
 import { withBase } from '../../lib/url';
@@ -38,7 +39,7 @@ const facts = houseFacts(stay);
           <span>{stay.guests} voyageurs</span><span>{stay.bedrooms} chambre</span><span>{stay.surface} m²</span><span>{stay.commune}</span>
         </p>
         <div class="actions rise d5">
-          <a class="button button-primary" href="#reserver">Réserver ce séjour</a>
+          <a class="button button-primary" href="#reserver">Réserver {house.shortName}</a>
           <a class="button button-ghost" href="#lieu">Découvrir le lieu →</a>
         </div>
       </div>
@@ -88,10 +89,7 @@ const facts = houseFacts(stay);
     </section>
 
     <section class="split section">
-      <div class="map" role="img" aria-label="Carte de localisation (à intégrer)">
-        <span class="map-pin" aria-hidden="true"></span>
-        <p class="caption">{stay.commune} · côte ouest</p>
-      </div>
+      <LocationMap place={stay.place} houseName={house.name} />
       <div class="stack stack-center">
         <p class="eyebrow">03 — Localisation</p>
         <h2 class="display-3">{stay.commune}, La Réunion</h2>

@@ -13,14 +13,23 @@ const total = String(photos.length).padStart(2, '0');
 const slides = [0, 1, 2].flatMap((copy) => photos.map((photo, i) => ({ photo, i, clone: copy !== 1 })));
 ---
 
-<section class="gallery section" aria-label="Galerie" aria-roledescription="carrousel" data-carousel data-count={photos.length}>
+<section
+  class="gallery section"
+  aria-label="Galerie"
+  aria-roledescription="carrousel"
+  data-carousel
+  data-count={photos.length}
+  style={`--i:${photos.length}`}
+>
   <div class="gallery-viewport">
     <ul class="gallery-track" data-track>
       {
         slides.map(({ photo, i, clone }) => (
           <li class="gallery-slide" aria-hidden={clone ? 'true' : undefined} inert={clone}>
             <figure>
-              <Photo file={photo.file} label={photo.label} class="gallery-photo" loading="eager" />
+              <button type="button" class="gallery-open" data-open={i} aria-label={`Agrandir : ${photo.label}`}>
+                <Photo file={photo.file} label={photo.label} class="gallery-photo" loading="eager" />
+              </button>
               <figcaption>
                 <span>{photo.label}</span>
                 <span>{String(i + 1).padStart(2, '0')} / {total}</span>
@@ -34,34 +43,52 @@ const slides = [0, 1, 2].flatMap((copy) => photos.map((photo, i) => ({ photo, i,
   <div class="gallery-controls">
     <span class="gallery-counter" aria-live="polite"><span data-current>01</span> / {total}</span>
     <div class="gallery-buttons">
-      <button type="button" data-step="-1" aria-label="Photo précédente">←</button>
-      <button type="button" data-step="1" aria-label="Photo suivante">→</button>
+      <button type="button" class="square-button" data-step="-1" aria-label="Photo précédente">←</button>
+      <button type="button" class="square-button" data-step="1" aria-label="Photo suivante">→</button>
     </div>
   </div>
+
+  <dialog class="lightbox" data-lightbox aria-label="Photo agrandie">
+    <figure class="lightbox-figure">
+      <img class="lightbox-img" data-lightbox-img alt="" />
+      <figcaption class="lightbox-caption">
+        <span data-lightbox-label></span>
+        <span><span data-lightbox-index></span> / {total}</span>
+      </figcaption>
+    </figure>
+    <div class="lightbox-buttons">
+      <button type="button" class="square-button" data-lightbox-step="-1" aria-label="Photo précédente">←</button>
+      <button type="button" class="square-button" data-lightbox-step="1" aria-label="Photo suivante">→</button>
+    </div>
+    <button type="button" class="square-button lightbox-close" data-lightbox-close aria-label="Fermer">✕</button>
+  </dialog>
 </section>
 
 <script>
+  const pad = (n: number) => String(n).padStart(2, '0');
+
   function initCarousel(root: HTMLElement) {
     if (root.dataset.ready) return;
     root.dataset.ready = 'true';
 
     const track = root.querySelector<HTMLElement>('[data-track]')!;
-    const slides = Array.from(track.children) as HTMLElement[];
     const current = root.querySelector<HTMLElement>('[data-current]')!;
     const count = Number(root.dataset.count);
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     let index = count; // first slide of the middle copy
 
+    // The position is pure CSS (`--i`, see .gallery-track), so the carousel is
+    // laid out correctly from the first paint, before this script runs.
     const place = (animate: boolean) => {
       track.style.transition = animate && !reduced.matches ? '' : 'none';
-      track.style.transform = `translateX(${-slides[index].offsetLeft}px)`;
-      current.textContent = String((index % count) + 1).padStart(2, '0');
+      root.style.setProperty('--i', String(index));
+      current.textContent = pad((index % count) + 1);
     };
 
     // Jump back into the middle copy without animation (identical content, so invisible).
     const normalize = () => {
       if (index >= count && index < count * 2) return;
-      index = ((index % count) + count) % count + count;
+      index = (((index % count) + count) % count) + count;
       place(false);
       void track.offsetWidth; // flush so the next move animates from here
     };
@@ -82,23 +109,69 @@ const slides = [0, 1, 2].flatMap((copy) => photos.map((photo, i) => ({ photo, i,
     });
 
     root.addEventListener('keydown', (event) => {
+      if (lightbox.open) return;
       if (event.key === 'ArrowLeft') move(-1);
       if (event.key === 'ArrowRight') move(1);
     });
 
-    // Horizontal swipe on touch screens and trackpad-less mice.
+    // Horizontal swipe; a swipe must not also open the lightbox.
     let startX: number | null = null;
+    let swiped = false;
     const viewport = root.querySelector<HTMLElement>('.gallery-viewport')!;
-    viewport.addEventListener('pointerdown', (event) => (startX = event.clientX));
+    viewport.addEventListener('pointerdown', (event) => {
+      startX = event.clientX;
+      swiped = false;
+    });
     viewport.addEventListener('pointerup', (event) => {
       if (startX === null) return;
       const dx = event.clientX - startX;
       startX = null;
-      if (Math.abs(dx) > 40) move(dx < 0 ? 1 : -1);
+      if (Math.abs(dx) > 40) {
+        swiped = true;
+        move(dx < 0 ? 1 : -1);
+      }
     });
     viewport.addEventListener('pointercancel', () => (startX = null));
 
-    new ResizeObserver(() => place(false)).observe(viewport);
+    // ---------- Lightbox ----------
+    const lightbox = root.querySelector<HTMLDialogElement>('[data-lightbox]')!;
+    const img = lightbox.querySelector<HTMLImageElement>('[data-lightbox-img]')!;
+    const label = lightbox.querySelector<HTMLElement>('[data-lightbox-label]')!;
+    const position = lightbox.querySelector<HTMLElement>('[data-lightbox-index]')!;
+    // Real slides only (middle copy), in order.
+    const sources = Array.from(root.querySelectorAll<HTMLElement>('.gallery-slide:not([inert]) .gallery-open'));
+    let shown = 0;
+
+    const show = (i: number) => {
+      shown = (i + count) % count;
+      const source = sources[shown].querySelector('img');
+      if (!source) return false;
+      img.src = source.currentSrc || source.src;
+      img.alt = source.alt;
+      label.textContent = source.alt;
+      position.textContent = pad(shown + 1);
+      if (!reduced.matches) img.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 450, easing: 'ease-out' });
+      return true;
+    };
+
+    root.querySelectorAll<HTMLButtonElement>('[data-open]').forEach((button) => {
+      button.addEventListener('click', () => {
+        if (swiped) return;
+        if (show(Number(button.dataset.open))) lightbox.showModal();
+      });
+    });
+    lightbox.querySelectorAll<HTMLButtonElement>('[data-lightbox-step]').forEach((button) => {
+      button.addEventListener('click', () => show(shown + Number(button.dataset.lightboxStep)));
+    });
+    lightbox.querySelector('[data-lightbox-close]')!.addEventListener('click', () => lightbox.close());
+    lightbox.addEventListener('click', (event) => {
+      if (event.target === lightbox) lightbox.close(); // click on the backdrop
+    });
+    lightbox.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') show(shown - 1);
+      if (event.key === 'ArrowRight') show(shown + 1);
+    });
+
     place(false);
   }
 

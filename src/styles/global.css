@@ -160,10 +160,22 @@ img {
 .tab:hover {
   color: var(--ink);
 }
-.tab-word {
+/* Each nav word uses its own house font, and fonts have different vertical
+   metrics. Trimming every text box to cap height / alphabetic baseline and
+   bottom-aligning fixed-height rows puts all baselines on the same line. */
+.tab-word,
+.tab-sub {
   display: flex;
-  align-items: baseline;
+  align-items: flex-end;
+}
+.tab-word > span,
+.tab-sub > span {
+  line-height: 1;
+  text-box: trim-both cap alphabetic;
+}
+.tab-word {
   gap: 8px;
+  height: 16px;
   font-size: 15px;
   letter-spacing: 0.04em;
 }
@@ -172,9 +184,9 @@ img {
   font-size: 10px;
 }
 .tab-sub {
-  display: flex;
-  align-items: baseline;
   gap: 6px;
+  height: 14px;
+  margin-top: 6px;
   font-size: 11px;
   color: var(--muted);
 }
@@ -191,7 +203,6 @@ img {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   text-decoration: none;
-  transition: opacity 0.6s;
 }
 /* No house is selected on the home page, so there is nothing to book yet. */
 html[data-home='true'] .pill {
@@ -479,6 +490,54 @@ html[data-home='true'] .pill {
   min-height: 56px;
 }
 
+/* ---------- Hover: a fill sweeps in from the left, text switches colour ---------- */
+.button,
+.pill,
+.square-button,
+.guests-buttons button {
+  --fill: var(--ink);
+  --fill-text: var(--bg);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition: color 0.5s var(--ease-out), border-color 0.5s var(--ease-out), opacity 0.6s;
+}
+.button::before,
+.pill::before,
+.square-button::before,
+.guests-buttons button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--fill);
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 0.6s var(--ease-out);
+}
+@media (hover: hover) {
+  .button:hover,
+  .pill:hover,
+  .square-button:hover,
+  .guests-buttons button:hover {
+    color: var(--fill-text);
+    border-color: var(--fill);
+  }
+  .button:hover::before,
+  .pill:hover::before,
+  .square-button:hover::before,
+  .guests-buttons button:hover::before {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+}
+.button:focus-visible,
+.pill:focus-visible,
+.square-button:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 3px;
+}
+
 .hero {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 500px), 1fr));
@@ -539,8 +598,9 @@ html[data-home='true'] .pill {
   margin: 0;
   padding: 0;
   list-style: none;
+  /* Position is pure CSS: --i (set on .gallery) slides, each (100% + gap) / per-view wide. */
+  transform: translateX(calc(var(--i, 0) * -1 * (100% + var(--gap)) / var(--per-view)));
   transition: transform 0.9s var(--ease-out);
-  will-change: transform;
 }
 .gallery-slide {
   flex: 0 0 calc((100% - var(--gap) * (var(--per-view) - 1)) / var(--per-view));
@@ -549,6 +609,25 @@ html[data-home='true'] .pill {
 }
 .gallery-slide img {
   pointer-events: none;
+  -webkit-user-drag: none;
+}
+.gallery-open {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  background: none;
+  color: inherit;
+  cursor: zoom-in;
+}
+.gallery-open .photo {
+  transition: transform 1.2s var(--ease-out);
+}
+@media (hover: hover) {
+  .gallery-open:hover .photo {
+    transform: scale(1.04);
+  }
 }
 .gallery figure {
   margin: 0;
@@ -579,18 +658,94 @@ html[data-home='true'] .pill {
   display: flex;
   gap: 8px;
 }
-.gallery-buttons button {
+.square-button {
   width: 52px;
   height: 52px;
+  padding: 0;
   border: 1px solid var(--line);
   background: none;
   color: inherit;
+  font: inherit;
   font-size: 18px;
   cursor: pointer;
-  transition: border-color 0.4s;
 }
-.gallery-buttons button:hover {
-  border-color: var(--ink);
+
+/* ---------- Lightbox ---------- */
+html:has(.lightbox[open]) {
+  overflow: hidden;
+}
+.lightbox {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: clamp(16px, 4vw, 56px);
+  border: 0;
+  background: transparent;
+  color: #f2efe9;
+}
+.lightbox[open] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  animation: lightbox-in 0.6s var(--ease-out);
+}
+.lightbox::backdrop {
+  background-color: rgba(14, 13, 12, 0.9);
+  backdrop-filter: blur(8px);
+  animation: backdrop-in 0.6s ease;
+}
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+    filter: blur(6px);
+  }
+}
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+.lightbox-figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 0;
+}
+.lightbox-img {
+  max-width: min(1280px, 100%);
+  max-height: calc(100dvh - 190px);
+  object-fit: contain;
+}
+.lightbox-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(242, 239, 233, 0.7);
+}
+.lightbox-buttons {
+  display: flex;
+  gap: 8px;
+}
+.lightbox .square-button {
+  --fill: #f2efe9;
+  --fill-text: #1a1917;
+  border-color: rgba(242, 239, 233, 0.3);
+}
+.lightbox-close {
+  position: absolute;
+  top: clamp(12px, 3vw, 32px);
+  right: clamp(12px, 3vw, 32px);
+  font-size: 15px;
 }
 
 .split {
@@ -656,22 +811,97 @@ html[data-home='true'] .pill {
   height: 480px;
   overflow: hidden;
   background-color: var(--tone);
-  background-image: linear-gradient(var(--line), var(--line)), linear-gradient(var(--line), var(--line)),
-    linear-gradient(var(--line), var(--line));
-  background-size: 100% 1px, 1px 100%, 1px 100%;
-  background-position: 0 58%, 36% 0, 71% 0;
-  background-repeat: no-repeat;
 }
-.map-pin {
+.map-svg {
   position: absolute;
-  left: 36%;
-  top: 58%;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  background-color: var(--accent);
-  box-shadow: 0 0 0 10px var(--halo);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.map-sea {
+  fill: var(--tone-2);
+}
+.map-reef {
+  fill: none;
+  stroke: var(--card);
+  stroke-width: 2;
+  stroke-dasharray: 2 5;
+  stroke-linecap: round;
+}
+.map-coast,
+.map-contour,
+.map-ravine {
+  fill: none;
+  stroke: var(--line);
+}
+.map-coast {
+  stroke: var(--muted);
+  stroke-opacity: 0.5;
+  stroke-width: 1.2;
+}
+.map-contour {
+  stroke-width: 1;
+}
+.map-ravine {
+  stroke-width: 1.4;
+  stroke-dasharray: 1 4;
+  stroke-linecap: round;
+}
+.map-road {
+  fill: none;
+  stroke: var(--card);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+.map-road-major {
+  stroke-width: 6;
+}
+.map-label {
+  fill: var(--muted);
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.map-label-sea {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-style: italic;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+.map-label-road {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+}
+.map-place {
+  fill: var(--muted);
+}
+.map-pin-halo {
+  fill: var(--halo);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pin-pulse 2.8s var(--ease-out) infinite;
+}
+.map-pin-dot {
+  fill: var(--accent);
+  stroke: var(--card);
+  stroke-width: 3;
+}
+.map-pin-label {
+  fill: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+}
+@keyframes pin-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
 }
 .map .caption {
   position: absolute;
@@ -767,6 +997,13 @@ html[data-home='true'] .pill {
   font-size: clamp(44px, 7vw, 104px);
   line-height: 1;
   letter-spacing: -0.02em;
+  transition: transform 0.8s var(--ease-out), color 0.6s;
+}
+@media (hover: hover) {
+  .next:hover .next-name {
+    transform: translateX(14px);
+    color: var(--accent);
+  }
 }
 
 .footer {

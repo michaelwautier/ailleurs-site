@@ -1,0 +1,71 @@
+---
+// Stylised (not to scale) map of the Saint-Leu area, west coast of Réunion.
+// Colours come from the page theme. The house pin sits on one of the places.
+
+export const places = {
+  town: { x: 352, y: 318, name: 'Saint-Leu' },
+  colimacons: { x: 498, y: 214, name: 'Les Colimaçons' },
+  chaloupe: { x: 668, y: 148, name: 'La Chaloupe' },
+  piton: { x: 566, y: 446, name: 'Piton Saint-Leu' },
+} as const;
+
+export type PlaceKey = keyof typeof places;
+
+interface Props {
+  place: PlaceKey;
+  houseName: string;
+}
+
+const { place, houseName } = Astro.props;
+const pin = places[place];
+const others = Object.entries(places).filter(([key]) => key !== place);
+---
+
+<div class="map" role="img" aria-label={`Plan du secteur de Saint-Leu, ${houseName} à ${pin.name}`}>
+  <svg class="map-svg" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <!-- Indian Ocean to the west -->
+    <path
+      class="map-sea"
+      d="M0 0 H318 C306 70 292 140 300 205 C308 262 338 300 334 352 C330 410 344 470 362 530 C370 556 376 580 380 600 H0 Z"
+    ></path>
+    <path class="map-coast" d="M318 0 C306 70 292 140 300 205 C308 262 338 300 334 352 C330 410 344 470 362 530 C370 556 376 580 380 600"></path>
+    <!-- Lagoon reef off Saint-Leu -->
+    <path class="map-reef" d="M282 238 C292 276 316 304 312 350 C309 390 316 420 326 446"></path>
+
+    <!-- Slopes rising towards the Hauts -->
+    <path class="map-contour" d="M402 0 C392 110 398 210 420 300 C440 380 446 470 470 600"></path>
+    <path class="map-contour" d="M520 0 C500 90 470 170 486 260 C500 340 530 420 540 600"></path>
+    <path class="map-contour" d="M610 0 C590 80 568 160 586 250 C604 330 640 410 640 600"></path>
+    <path class="map-contour" d="M712 0 C690 90 668 170 690 260 C712 350 742 430 746 600"></path>
+    <path class="map-contour" d="M790 40 C770 120 760 200 778 300 C792 380 800 440 800 480"></path>
+
+    <!-- Ravines down to the sea -->
+    <path class="map-ravine" d="M760 90 C680 120 600 150 520 160 C440 172 380 160 302 150"></path>
+    <path class="map-ravine" d="M780 380 C700 372 640 390 560 392 C480 394 420 400 336 400"></path>
+
+    <!-- Roads -->
+    <path class="map-road" d="M330 0 C318 80 306 150 314 210 C322 266 352 302 348 352 C344 410 358 470 376 530 C384 556 390 580 394 600"></path>
+    <path class="map-road map-road-major" d="M452 0 C440 120 440 220 462 320 C480 400 500 500 516 600"></path>
+    <path class="map-road" d="M352 318 C400 300 440 260 470 240 C500 220 520 210 540 196 C590 166 630 156 668 148"></path>
+    <path class="map-road" d="M352 340 C420 360 470 400 520 430 C540 440 556 446 566 446"></path>
+
+    <text class="map-label map-label-sea" x="70" y="300">Océan Indien</text>
+    <text class="map-label map-label-road" x="0" y="0" transform="translate(522 540) rotate(-79)">Route des Tamarins</text>
+
+    {
+      others.map(([, p]) => (
+        <g>
+          <circle class="map-place" cx={p.x} cy={p.y} r="4"></circle>
+          <text class="map-label" x={p.x + 12} y={p.y + 4}>{p.name}</text>
+        </g>
+      ))
+    }
+
+    <g>
+      <circle class="map-pin-halo" cx={pin.x} cy={pin.y} r="26"></circle>
+      <circle class="map-pin-dot" cx={pin.x} cy={pin.y} r="9"></circle>
+      <text class="map-label map-pin-label" x={pin.x + 18} y={pin.y + 4}>{pin.name}</text>
+    </g>
+  </svg>
+  <p class="caption">Plan indicatif · {pin.name}</p>
+</div>
