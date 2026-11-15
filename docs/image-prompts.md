@@ -64,3 +64,39 @@ Common context for every house: tiny house (max ~40 m²) on **Réunion Island**,
 06-bathroom: Photograph of an outdoor shower in a Balinese-inspired tiny villa on Réunion Island: black volcanic basalt stone walls, copper rain shower head, teak duckboard floor, ferns, monstera and frangipani growing around, open to the sky. Dappled light. Editorial interior photography, photorealistic, no people, no text.
 
 07-garden: Photograph of a lush tropical garden around a tiny Balinese-inspired villa on Réunion Island: stepping stones in black basalt, small stone shrine, frangipani, palms, banana plants and tree ferns, thatched roof visible through the foliage, misty green volcanic slopes behind. Soft overcast light. Editorial landscape photography, photorealistic, no people, no text.
+
+## Generated files (2026-11-15) — download each and save it at the path shown
+
+| Save as | Higgsfield URL |
+| --- | --- |
+| public/images/kumo/01-drone.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_060649_4509b8f6-192c-4122-b503-d3b4596f26c6.png |
+| public/images/kumo/02-terrace.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_060817_a7406152-78e0-465e-8f26-1f375e220e3e.png |
+| public/images/kumo/03-chill.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_060740_d31138e9-dae2-475e-a686-dc3b22f59531.png |
+| public/images/kumo/04-signature.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_060917_63117a69-62c1-449f-879c-a1e254faa53c.png |
+| public/images/kumo/05-bedroom.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_061052_cdf7a4c2-8e86-459a-a4c6-9be3a01be253.png |
+| public/images/kumo/06-bathroom.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_061133_550c2c69-dfbd-485a-ac18-ef16e21082a0.png |
+| public/images/kumo/07-garden.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_061635_4560ef72-6d9e-4c39-9196-57f28b5f3c5c.png |
+| public/images/vetiver/01-drone.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_063402_3971946d-4a26-4974-b846-f338d67334fe.png |
+| public/images/vetiver/02-terrace.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_063401_6aee16a2-1c03-409d-8853-f382495469d4.png |
+| public/images/vetiver/03-chill.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_063401_7e2bb9ed-0c55-4a0a-8737-d6605805bc7c.png |
+| public/images/vetiver/04-signature.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_063400_82f7def7-2a5f-48f8-8a59-5cc377572015.png |
+| public/images/vetiver/05-bedroom.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_063401_e941d7d5-6b69-45be-8a0b-5719056909eb.png |
+| public/images/vetiver/06-bathroom.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_063402_702ce02a-843b-4362-92b3-73645db0f47f.png |
+| public/images/vetiver/07-garden.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_063400_8afe8c98-42fe-4e0c-96b7-9719def54165.png |
+| public/images/zellij/01-drone.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_063401_9ac66ced-d067-421e-96d9-10432ae2c68a.png |
+| public/images/zellij/02-terrace.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_063401_c11457ae-8777-4688-8101-d2415ef00760.png |
+| public/images/zellij/03-chill.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_063401_cce657f2-7130-4ffb-b4d1-392e716c34c7.png |
+| public/images/zellij/04-signature.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_063401_8473edae-8e12-446e-bfcb-d04cd9b47518.png |
+| public/images/zellij/05-bedroom.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_063402_051759f0-d283-4a05-a31a-db45571f8749.png |
+| public/images/zellij/06-bathroom.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_063418_8c34b9ea-83b5-4948-93f8-521e0ed35f05.png |
+| public/images/zellij/07-garden.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_063416_cbb84cb9-a47a-486b-ad12-be664bedf3da.png |
+| public/images/sawah/01-drone.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_063417_b33aff45-f108-46b3-999d-4f975825ad01.png |
+| public/images/sawah/02-terrace.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_063418_1d428f6b-d449-4485-ab8c-5b17eadb4bda.png |
+| public/images/sawah/03-chill.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_063417_d09ca458-fe3f-428d-b88b-697e30c933bc.png |
+| public/images/sawah/04-signature.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_063417_0f9bc226-ed4e-466e-a96c-a0bad684e964.png |
+| public/images/sawah/05-bedroom.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_063417_4bcf8c68-1b1f-4f80-af7d-d3e99ad69c3f.png |
+| public/images/sawah/06-bathroom.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_063417_f1f75f0c-d79b-4487-ba25-f1a04e029b6c.png |
+| public/images/sawah/07-garden.jpg | https://d8j0ntlcm91z4.cloudfront.net/user_3M8AAmaSKLSKrsncXQq0183Htpd/hf_20261115_063417_6d1d5bd6-b29f-4c35-a750-5b3977f34b8d.png |
+
+Note: the files are PNG; either convert them to JPG or rename the extension in `src/data/houses.ts` (`photos()` helper).
+The free-tier job 77921238-3492-49ed-9498-4ab67095fab9 (vetiver drone) was stuck in the queue and was regenerated with credits.
