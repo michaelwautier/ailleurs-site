@@ -205,6 +205,7 @@ img {
 .pill {
   display: inline-flex;
   align-items: center;
+  gap: 10px;
   min-height: 44px;
   padding: 0 22px;
   border: 1px solid var(--ink);
@@ -475,6 +476,7 @@ html[data-home='true'] .pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 10px;
   min-height: 52px;
   padding: 0 28px;
   border: 1px solid transparent;
@@ -497,6 +499,12 @@ html[data-home='true'] .pill {
 .button-block {
   width: 100%;
   min-height: 56px;
+}
+
+/* Inline icons (calendar on booking buttons). */
+.icon {
+  flex: none;
+  display: block;
 }
 
 /* ---------- Hover: a fill sweeps in from the left, text switches colour ---------- */
