@@ -11,7 +11,7 @@ const { activeSlug } = Astro.props;
 ---
 
 <header class="site-header" id="top" transition:persist>
-  <a class="brand" href={withBase('/')} aria-label="Accueil Ailleurs">
+  <a class="brand" href={withBase('/')}>
     <span class="brand-name">Ailleurs</span>
     <span class="brand-sub">Maisons d'univers</span>
   </a>
@@ -22,7 +22,6 @@ const { activeSlug } = Astro.props;
           class="tab"
           href={withBase(`/maisons/${house.slug}`)}
           aria-current={house.slug === activeSlug ? 'page' : undefined}
-          aria-label={`${house.word} — ${house.meaning} (${house.tab})`}
         >
           <span class="tab-word">
             <span class="tab-index">{house.index}</span>
