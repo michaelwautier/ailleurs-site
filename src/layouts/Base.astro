@@ -31,13 +31,29 @@ const { title, description = 'Quatre petites maisons à univers à La Réunion :
   <body>
     <slot />
     <script>
+      // The view transition snapshots the new page right after the swap. If its hero
+      // photo is not loaded yet, the old photo fades into an empty box and the new one
+      // pops in afterwards. Load and decode it first (capped, so a slow network never
+      // blocks navigation for long).
+      document.addEventListener('astro:before-preparation', (event) => {
+        const load = event.loader;
+        event.loader = async () => {
+          await load();
+          const src = event.newDocument?.querySelector('.hero-photo img')?.getAttribute('src');
+          if (!src) return;
+          const img = new Image();
+          img.src = new URL(src, event.to).href;
+          await Promise.race([img.decode().catch(() => {}), new Promise((r) => setTimeout(r, 1500))]);
+        };
+      });
+
       // Slow, eased scroll for in-page anchors (native smooth scroll is too quick).
       const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 
       function scrollToY(target: number) {
         const start = window.scrollY;
         const distance = target - start;
-        const duration = Math.min(2000, Math.max(1000, Math.abs(distance) * 0.6));
+        const duration = Math.min(1400, Math.max(700, Math.abs(distance) * 0.45));
         const t0 = performance.now();
         const step = (now: number) => {
           const t = Math.min(1, (now - t0) / duration);
@@ -60,7 +76,10 @@ const { title, description = 'Quatre petites maisons à univers à La Réunion :
           event.stopPropagation();
           history.pushState(history.state, '', link.hash);
           if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) target.scrollIntoView();
-          else scrollToY(target.getBoundingClientRect().top + window.scrollY);
+          else {
+            const margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+            scrollToY(Math.max(0, target.getBoundingClientRect().top + window.scrollY - margin));
+          }
         },
         { capture: true },
       );

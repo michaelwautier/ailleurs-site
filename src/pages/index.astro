@@ -16,7 +16,7 @@ import { withBase } from '../lib/url';
           <a class="card" href={withBase(`/maisons/${house.slug}`)} style={themeStyle(house.theme)} aria-label={`Entrer dans ${house.name}, univers ${house.tab}`}>
             <span class="card-top">
               <span class="card-preview">
-                <Photo file={house.photos[0].file} label={house.photos[0].label} transitionName={`hero-${house.slug}`} loading="eager" />
+                <Photo file={house.photos[0].file} label={house.photos[0].label} loading="eager" />
               </span>
               <span class="card-mark" aria-hidden="true">
                 <span lang={house.lang} dir={house.dir} style={`font-family:${house.nativeFont};font-style:${house.glyphItalic ? 'italic' : 'normal'}`}>
@@ -56,3 +56,14 @@ import { withBase } from '../lib/url';
     </footer>
   </main>
 </Base>
+
+<script>
+  // Every house page names its hero photo `hero-photo`, so it crossfades from one
+  // universe to the next. From the home page, only the clicked card's preview takes
+  // that name, so its photo morphs into the hero of the house it opens.
+  document.addEventListener('astro:before-preparation', (event) => {
+    const card = (event.sourceElement as Element | undefined)?.closest?.('.card');
+    const photo = card?.querySelector<HTMLElement>('.card-preview .photo');
+    if (photo) photo.style.viewTransitionName = 'hero-photo';
+  });
+</script>
