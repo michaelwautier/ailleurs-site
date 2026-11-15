@@ -24,11 +24,46 @@ const { title, description = 'Quatre petites maisons à univers à La Réunion :
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=Manrope:wght@400;500;600&family=Marcellus&family=Noto+Naskh+Arabic:wght@400;500&family=Noto+Sans+Balinese&family=Shippori+Mincho:wght@400;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=Italiana&family=Manrope:wght@400;500;600&family=Marcellus&family=Noto+Naskh+Arabic:wght@400;500&family=Noto+Sans+Balinese&family=Shippori+Mincho:wght@400;600&display=swap"
     />
     <ClientRouter fallback="swap" />
   </head>
   <body>
     <slot />
+    <script>
+      // Slow, eased scroll for in-page anchors (native smooth scroll is too quick).
+      const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+
+      function scrollToY(target: number) {
+        const start = window.scrollY;
+        const distance = target - start;
+        const duration = Math.min(2000, Math.max(1000, Math.abs(distance) * 0.6));
+        const t0 = performance.now();
+        const step = (now: number) => {
+          const t = Math.min(1, (now - t0) / duration);
+          window.scrollTo({ top: start + distance * easeInOut(t), behavior: 'instant' });
+          if (t < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      }
+
+      // Capture phase so this runs before the view-transition router handles the click.
+      document.addEventListener(
+        'click',
+        (event) => {
+          const link = (event.target as Element).closest<HTMLAnchorElement>('a[href^="#"]');
+          if (!link || event.defaultPrevented || event.metaKey || event.ctrlKey) return;
+          const id = decodeURIComponent(link.hash.slice(1));
+          const target = id ? document.getElementById(id) : null;
+          if (!target) return;
+          event.preventDefault();
+          event.stopPropagation();
+          history.pushState(history.state, '', link.hash);
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) target.scrollIntoView();
+          else scrollToY(target.getBoundingClientRect().top + window.scrollY);
+        },
+        { capture: true },
+      );
+    </script>
   </body>
 </html>

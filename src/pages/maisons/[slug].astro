@@ -2,8 +2,9 @@
 import Base from '../../layouts/Base.astro';
 import Header from '../../components/Header.astro';
 import Photo from '../../components/Photo.astro';
+import Gallery from '../../components/Gallery.astro';
 import BookingForm from '../../components/BookingForm.astro';
-import { houses, facts, nearby, nextHouse, themeStyle, type House } from '../../data/houses';
+import { houses, houseFacts, contact, nextHouse, themeStyle, type House } from '../../data/houses';
 import { withBase } from '../../lib/url';
 
 export function getStaticPaths() {
@@ -17,6 +18,8 @@ interface Props {
 const { house } = Astro.props;
 const next = nextHouse(house.slug);
 const [hero, ...gallery] = house.photos;
+const { stay } = house;
+const facts = houseFacts(stay);
 ---
 
 <Base title={`${house.name} — Ailleurs`} description={house.tagline} themeStyle={themeStyle(house.theme)} scheme={house.theme.scheme}>
@@ -32,7 +35,7 @@ const [hero, ...gallery] = house.photos;
         <h1 class="display rise d2">{house.name}</h1>
         <p class="lead rise d3">{house.tagline}</p>
         <p class="quick-facts rise d4">
-          <span>[N] voyageurs</span><span>[N] chambres</span><span>[N] m²</span><span>[COMMUNE]</span>
+          <span>{stay.guests} voyageurs</span><span>{stay.bedrooms} chambre</span><span>{stay.surface} m²</span><span>{stay.commune}</span>
         </p>
         <div class="actions rise d5">
           <a class="button button-primary" href="#reserver">Réserver ce séjour</a>
@@ -48,19 +51,7 @@ const [hero, ...gallery] = house.photos;
       </div>
     </section>
 
-    <section class="gallery section" aria-label="Galerie">
-      {
-        gallery.map((photo, i) => (
-          <figure>
-            <Photo file={photo.file} label={photo.label} class="gallery-photo" />
-            <figcaption>
-              <span>{photo.label}</span>
-              <span>{String(i + 1).padStart(2, '0')} / {String(gallery.length).padStart(2, '0')}</span>
-            </figcaption>
-          </figure>
-        ))
-      }
-    </section>
+    <Gallery photos={gallery} />
 
     <section id="lieu" class="split section">
       <div class="stack">
@@ -99,15 +90,15 @@ const [hero, ...gallery] = house.photos;
     <section class="split section">
       <div class="map" role="img" aria-label="Carte de localisation (à intégrer)">
         <span class="map-pin" aria-hidden="true"></span>
-        <p class="caption">[Carte interactive]</p>
+        <p class="caption">{stay.commune} · côte ouest</p>
       </div>
       <div class="stack stack-center">
         <p class="eyebrow">03 — Localisation</p>
-        <h2 class="display-3">[Commune], La Réunion</h2>
-        <p class="body-text muted">[ADRESSE OU SECTEUR]</p>
+        <h2 class="display-3">{stay.commune}, La Réunion</h2>
+        <p class="body-text muted">{stay.address}</p>
         <ul class="nearby">
           {
-            nearby.map((item) => (
+            stay.nearby.map((item) => (
               <li>
                 <span>{item.key}</span>
                 <span class="muted">{item.value}</span>
@@ -123,9 +114,9 @@ const [hero, ...gallery] = house.photos;
         <div class="stack">
           <p class="eyebrow">04 — Réserver</p>
           <h2 class="display-2">Séjourner à {house.name}</h2>
-          <p class="body-text muted">À partir de [PRIX] € / nuit · minimum [N] nuits · jusqu'à [N] voyageurs.</p>
+          <p class="body-text muted">À partir de {stay.price} € / nuit · minimum {stay.minNights} nuits · jusqu'à {stay.guests} voyageurs.</p>
         </div>
-        <BookingForm houseName={house.name} />
+        <BookingForm houseName={house.name} price={stay.price} maxGuests={stay.guests} minNights={stay.minNights} />
       </div>
     </section>
 
@@ -141,14 +132,14 @@ const [hero, ...gallery] = house.photos;
 
     <footer class="footer house-footer">
       <span class="footer-brand">Ailleurs</span>
-      <span>[EMAIL] · [TÉLÉPHONE] · [INSTAGRAM]</span>
+      <span>{contact.email} · {contact.phone} · {contact.instagram}</span>
       <a href="#top">Haut de page ↑</a>
     </footer>
 
     <div class="mobile-bar">
       <span class="mobile-bar-text">
         <span class="mobile-bar-name">{house.name}</span>
-        <span>[PRIX] € / nuit</span>
+        <span>{stay.price} € / nuit</span>
       </span>
       <a class="button button-primary" href="#reserver">Réserver</a>
     </div>

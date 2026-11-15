@@ -21,13 +21,15 @@ Premium booking site for four small themed holiday houses (max ~40 m² each, ter
 
 - Reference mood: nakagawa-corp.com, stillform.homes, bcgbuildingdesign.com.au, residences.loamhouse.com.au — quiet, editorial, premium.
 - Transitions stay subtle: crossfade + slight blur, shared-element morph of the hero photo (`transition:name="hero-<slug>"`). No full-screen color wipes.
-- Home: 4 full-height cards; hovered card grows and reveals the house preview. On tablet (≤860px) 2×2 grid and on phone (≤600px) 4 stacked rows, both fitting exactly one screen (`100dvh`), no nav bar.
+- Header: brand uses its own fixed font (`--font-brand`), each nav tab uses its house's font, so the header never changes font between pages. The Réserver button is hidden on home.
+- No rounded corners on buttons or chips (square edges = premium).
+- Home: 4 full-height cards; hovered card grows and reveals the house preview (preview is fixed-width so the photo never rescales). On tablet (≤860px) 2×2 grid and on phone (≤600px) 4 stacked rows, both fitting exactly one screen (`100dvh`), no nav bar.
 - Phone house pages show a floating "Réserver" bar.
 
 ## Conventions
 
 - All code, identifiers, file names and comments in English. UI copy in French.
-- Placeholders in brackets (`[PRIX]`, `[N]`, `[COMMUNE]`) are facts still to be provided — never invent them.
+- Stay facts, prices, addresses, travel times and contact details in `src/data/houses.ts` are plausible dummy values (Saint-Leu, airport Roland-Garros) — they must be validated before going live.
 - Booking form is front-end only for now (TODO: connect to a booking engine / channel manager).
 - AI-generated images are mood images only; real photos must replace them before going live.
 

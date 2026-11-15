@@ -1,6 +1,8 @@
 /* Theme variables are set per page on <html> (see Base.astro). */
 :root {
   --font-body: 'Manrope', system-ui, sans-serif;
+  /* Fixed brand font: never follows the page theme. */
+  --font-brand: 'Italiana', serif;
   --pad-x: clamp(20px, 5vw, 80px);
   --max: 1440px;
   --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
@@ -16,7 +18,6 @@
 html {
   background-color: var(--bg);
   color: var(--ink);
-  scroll-behavior: smooth;
 }
 
 body {
@@ -41,7 +42,7 @@ img {
 /* ---------- View transitions: soft crossfade with blur ---------- */
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 0.7s;
+  animation-duration: 1.1s;
   animation-timing-function: var(--ease-out);
 }
 ::view-transition-old(root) {
@@ -51,7 +52,7 @@ img {
   animation-name: vt-in;
 }
 ::view-transition-group(*) {
-  animation-duration: 0.8s;
+  animation-duration: 1.2s;
   animation-timing-function: var(--ease-in-out);
 }
 @keyframes vt-out {
@@ -117,8 +118,9 @@ img {
   text-decoration: none;
 }
 .brand-name {
-  font-family: var(--font-display);
+  font-family: var(--font-brand);
   font-size: 30px;
+  letter-spacing: 0.02em;
 }
 .brand-sub,
 .eyebrow,
@@ -166,6 +168,7 @@ img {
   letter-spacing: 0.04em;
 }
 .tab-index {
+  font-family: var(--font-body);
   font-size: 10px;
 }
 .tab-sub {
@@ -184,11 +187,16 @@ img {
   min-height: 44px;
   padding: 0 22px;
   border: 1px solid var(--ink);
-  border-radius: 999px;
   font-size: 13px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   text-decoration: none;
+  transition: opacity 0.6s;
+}
+/* No house is selected on the home page, so there is nothing to book yet. */
+html[data-home='true'] .pill {
+  visibility: hidden;
+  opacity: 0;
 }
 
 /* ---------- Photos ---------- */
@@ -242,17 +250,23 @@ img {
   flex: 1 1 auto;
   overflow: hidden;
 }
+/* The preview is sized to the expanded card width (2.6 / 5.6 of the row) and
+   centred, so the growing card only reveals it like a window: the image itself
+   never resizes or re-crops during the flex animation. */
 .card-preview {
   position: absolute;
-  inset: 0;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 47vw;
   opacity: 0;
-  transform: scale(1.08);
-  transition: opacity 0.8s ease, transform 1.4s var(--ease-out);
+  transform: translateX(-50%) scale(1.03);
+  transition: opacity 0.7s ease, transform 0.9s var(--ease-out);
 }
 .card:hover .card-preview,
 .card:focus-visible .card-preview {
   opacity: 1;
-  transform: none;
+  transform: translateX(-50%);
 }
 .card-mark {
   position: absolute;
@@ -444,7 +458,6 @@ img {
   min-height: 52px;
   padding: 0 28px;
   border: 1px solid transparent;
-  border-radius: 999px;
   font: inherit;
   font-size: 13px;
   font-weight: 600;
@@ -484,7 +497,6 @@ img {
   position: relative;
   height: 680px;
   overflow: hidden;
-  border-radius: 2px;
 }
 .hero-glyph {
   position: absolute;
@@ -506,15 +518,37 @@ img {
   bottom: 28px;
   margin: 0;
   padding: 6px 12px;
-  border-radius: 999px;
   background-color: var(--card);
   color: var(--ink);
 }
 
 .gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-  gap: 16px;
+  --per-view: 3.3;
+  --gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.gallery-viewport {
+  overflow: hidden;
+  touch-action: pan-y;
+}
+.gallery-track {
+  display: flex;
+  gap: var(--gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transition: transform 0.9s var(--ease-out);
+  will-change: transform;
+}
+.gallery-slide {
+  flex: 0 0 calc((100% - var(--gap) * (var(--per-view) - 1)) / var(--per-view));
+  min-width: 0;
+  user-select: none;
+}
+.gallery-slide img {
+  pointer-events: none;
 }
 .gallery figure {
   margin: 0;
@@ -524,15 +558,39 @@ img {
 }
 .gallery-photo {
   height: 440px;
-  border-radius: 2px;
 }
-.gallery figcaption {
+.gallery figcaption,
+.gallery-counter {
   display: flex;
   justify-content: space-between;
+  gap: 16px;
   font-size: 12px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--muted);
+}
+.gallery-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.gallery-buttons {
+  display: flex;
+  gap: 8px;
+}
+.gallery-buttons button {
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--line);
+  background: none;
+  color: inherit;
+  font-size: 18px;
+  cursor: pointer;
+  transition: border-color 0.4s;
+}
+.gallery-buttons button:hover {
+  border-color: var(--ink);
 }
 
 .split {
@@ -569,7 +627,7 @@ img {
 }
 .amenities {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0 32px;
 }
 .amenities li,
@@ -597,7 +655,6 @@ img {
   position: relative;
   height: 480px;
   overflow: hidden;
-  border-radius: 2px;
   background-color: var(--tone);
   background-image: linear-gradient(var(--line), var(--line)), linear-gradient(var(--line), var(--line)),
     linear-gradient(var(--line), var(--line));
@@ -629,7 +686,6 @@ img {
   gap: 56px;
   padding: clamp(28px, 5vw, 72px);
   border: 1px solid var(--line);
-  border-radius: 4px;
   background-color: var(--card);
 }
 .booking-form {
@@ -652,7 +708,6 @@ img {
   min-height: 52px;
   padding: 0 16px;
   border: 1px solid var(--line);
-  border-radius: 2px;
   background-color: var(--bg);
   color: var(--ink);
   font: inherit;
@@ -668,7 +723,6 @@ img {
   min-height: 52px;
   padding: 4px 4px 4px 16px;
   border: 1px solid var(--line);
-  border-radius: 2px;
   background-color: var(--bg);
 }
 .guests-buttons {
@@ -679,7 +733,6 @@ img {
   width: 44px;
   height: 44px;
   border: 1px solid var(--line);
-  border-radius: 50%;
   background: none;
   color: inherit;
   font-size: 18px;
@@ -728,7 +781,7 @@ img {
   color: var(--muted);
 }
 .footer-brand {
-  font-family: var(--font-display);
+  font-family: var(--font-brand);
   font-size: 22px;
   color: var(--ink);
 }
@@ -765,10 +818,9 @@ img {
     margin: 0;
     padding: 6px 16px;
     transform: translateX(-50%);
-    border-radius: 999px;
-    background-color: #f2efe9;
+      background-color: #f2efe9;
     color: #1a1917;
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-brand);
     font-size: 18px;
     line-height: 1.2;
     pointer-events: none;
@@ -791,6 +843,10 @@ img {
   .card:focus-visible {
     flex-grow: 1;
   }
+  .card-preview {
+    left: 0;
+    width: 100%;
+  }
   .card-preview,
   .card-more {
     opacity: 1;
@@ -802,6 +858,9 @@ img {
 
   .hero-photo {
     height: 520px;
+  }
+  .gallery {
+    --per-view: 2.2;
   }
   .gallery-photo {
     height: 340px;
@@ -847,8 +906,15 @@ img {
   .hero-photo {
     height: 440px;
   }
+  .gallery {
+    --per-view: 1.15;
+    --gap: 12px;
+  }
   .gallery-photo {
     height: 300px;
+  }
+  .amenities {
+    grid-template-columns: 1fr;
   }
   .map {
     height: 320px;
@@ -865,8 +931,7 @@ img {
     gap: 12px;
     padding: 10px 10px 10px 20px;
     border: 1px solid var(--line);
-    border-radius: 999px;
-    background-color: var(--card);
+      background-color: var(--card);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   }
   .mobile-bar-text {

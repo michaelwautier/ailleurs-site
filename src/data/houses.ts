@@ -35,7 +35,21 @@ export type House = {
   description: string;
   photos: Photo[];
   amenities: string[];
+  stay: Stay;
   theme: Theme;
+};
+
+export type Stay = {
+  guests: number;
+  bedrooms: number;
+  bed: string;
+  bathrooms: number;
+  surface: number;
+  price: number;
+  minNights: number;
+  commune: string;
+  address: string;
+  nearby: { key: string; value: string }[];
 };
 
 export const homeTheme = {
@@ -48,21 +62,29 @@ export const homeTheme = {
   font: "'Cormorant Garamond', serif",
 } as const;
 
-// Placeholder facts: replace with the real values of each house.
-export const facts = [
-  { key: 'Voyageurs', value: '[N]' },
-  { key: 'Chambres', value: '[N]' },
-  { key: 'Lits', value: '[N]' },
-  { key: 'Salles de bain', value: '[N]' },
-  { key: 'Surface', value: '[N] m²' },
-  { key: 'Arrivée / départ', value: '[HH] / [HH]' },
-];
+// Dummy contact and stay values (plausible defaults): validate before going live.
+export const contact = {
+  email: 'bonjour@ailleurs-reunion.fr',
+  phone: '+262 692 00 00 00',
+  instagram: '@ailleurs.reunion',
+};
 
-export const nearby = [
-  { key: '[Plage ou site naturel]', value: '[X] min' },
-  { key: '[Village, commerces]', value: '[X] min' },
-  { key: '[Aéroport]', value: '[X] min' },
-];
+const checkIn = '15 h';
+const checkOut = '11 h';
+
+export function houseFacts(stay: Stay) {
+  return [
+    { key: 'Voyageurs', value: String(stay.guests) },
+    { key: 'Chambres', value: String(stay.bedrooms) },
+    { key: 'Couchage', value: stay.bed },
+    { key: 'Salles de bain', value: String(stay.bathrooms) },
+    { key: 'Surface', value: `${stay.surface} m²` },
+    { key: 'Arrivée / départ', value: `${checkIn} / ${checkOut}` },
+  ];
+}
+
+// Drive times from Saint-Leu (west coast) via the Route des Tamarins.
+const airport = { key: 'Aéroport Roland-Garros', value: '55 min' };
 
 const shots = ['01-drone', '02-terrace', '03-chill', '04-signature', '05-bedroom', '06-bathroom', '07-garden'];
 
@@ -96,7 +118,19 @@ export const houses: House[] = [
       'Salle de bain et bain ofuro',
       'Jardin sec',
     ]),
-    amenities: ['Piscine privée', 'Terrasse en bois', 'Bain ofuro', 'Futons sur tatamis', 'Coin thé', 'Wi-Fi'],
+    amenities: [
+      'Piscine privée', 'Terrasse en bois', 'Bain ofuro', 'Futons sur tatamis', 'Coin thé',
+      'Kitchenette équipée', 'Climatisation', 'Linge de maison', 'Wi-Fi',
+    ],
+    stay: {
+      guests: 2, bedrooms: 1, bed: 'Futon 160', bathrooms: 1, surface: 32, price: 165, minNights: 2,
+      commune: 'Saint-Leu', address: '12 chemin des Filaos, La Chaloupe — 97416 Saint-Leu',
+      nearby: [
+        { key: 'Lagon de Saint-Leu', value: '10 min' },
+        { key: 'Centre de Saint-Leu, commerces', value: '10 min' },
+        airport,
+      ],
+    },
     theme: {
       bg: '#1A1917', ink: '#EFEAE0', muted: '#A8A194', accent: '#D4553F', onAccent: '#14110F',
       tone: '#272522', tone2: '#312E2A', card: '#211F1C', line: 'rgba(239,234,224,0.18)',
@@ -128,7 +162,19 @@ export const houses: House[] = [
       'Salle de bain bois et pierre',
       'Façade et lambrequins',
     ]),
-    amenities: ['Piscine privée', 'Varangue meublée', 'Jardin créole', 'Hamac', 'Cuisine équipée', 'Wi-Fi'],
+    amenities: [
+      'Piscine privée', 'Varangue meublée', 'Jardin créole', 'Hamac', 'Cuisine équipée',
+      'Barbecue', 'Ventilateurs de plafond', 'Linge de maison', 'Wi-Fi',
+    ],
+    stay: {
+      guests: 2, bedrooms: 1, bed: 'Lit 160', bathrooms: 1, surface: 38, price: 145, minNights: 2,
+      commune: 'Saint-Leu', address: '4 allée des Letchis, Piton Saint-Leu — 97424 Saint-Leu',
+      nearby: [
+        { key: 'Lagon de Saint-Leu', value: '12 min' },
+        { key: 'Marché de Piton Saint-Leu', value: '3 min' },
+        airport,
+      ],
+    },
     theme: {
       bg: '#E3EAE1', ink: '#13251D', muted: '#475A50', accent: '#1C6553', onAccent: '#F4F7F2',
       tone: '#CCD7C9', tone2: '#BACAB7', card: '#EDF2EB', line: 'rgba(19,37,29,0.18)',
@@ -160,7 +206,19 @@ export const houses: House[] = [
       'Salle de bain en tadelakt',
       'Terrasse et bougainvilliers',
     ]),
-    amenities: ['Bassin en zelliges', 'Terrasse sur le toit', 'Salon marocain', 'Douche en tadelakt', 'Climatisation', 'Wi-Fi'],
+    amenities: [
+      'Bassin en zelliges', 'Terrasse sur le toit', 'Salon marocain', 'Douche en tadelakt', 'Climatisation',
+      'Kitchenette équipée', 'Service à thé', 'Linge de maison', 'Wi-Fi',
+    ],
+    stay: {
+      guests: 2, bedrooms: 1, bed: 'Lit 160', bathrooms: 1, surface: 36, price: 155, minNights: 2,
+      commune: 'Saint-Leu', address: '27 rue des Bougainvilliers — 97436 Saint-Leu',
+      nearby: [
+        { key: 'Plage et lagon de Saint-Leu', value: '4 min' },
+        { key: 'Centre de Saint-Leu, commerces', value: '3 min' },
+        airport,
+      ],
+    },
     theme: {
       bg: '#EEDBC8', ink: '#2B1A11', muted: '#664636', accent: '#8E3A1F', onAccent: '#FBF1E7',
       tone: '#E2C6AC', tone2: '#D5B194', card: '#F5E7DA', line: 'rgba(43,26,17,0.18)',
@@ -193,7 +251,19 @@ export const houses: House[] = [
       'Douche extérieure',
       'Jardin tropical',
     ]),
-    amenities: ['Piscine à débordement', 'Bale de repos', 'Douche extérieure', 'Cuisine ouverte', 'Linge de maison', 'Wi-Fi'],
+    amenities: [
+      'Piscine à débordement', 'Bale de repos', 'Douche extérieure', 'Cuisine ouverte', 'Lit à baldaquin',
+      'Ventilateurs de plafond', 'Parking privé', 'Linge de maison', 'Wi-Fi',
+    ],
+    stay: {
+      guests: 2, bedrooms: 1, bed: 'Lit 180', bathrooms: 1, surface: 40, price: 175, minNights: 2,
+      commune: 'Saint-Leu', address: '9 chemin des Bambous, Les Colimaçons — 97436 Saint-Leu',
+      nearby: [
+        { key: 'Jardin botanique de Mascarin', value: '5 min' },
+        { key: 'Lagon de Saint-Leu', value: '15 min' },
+        { key: 'Aéroport Roland-Garros', value: '1 h' },
+      ],
+    },
     theme: {
       bg: '#E9E5D6', ink: '#1E2116', muted: '#525742', accent: '#4E5A24', onAccent: '#F6F4EA',
       tone: '#D7D2BD', tone2: '#C7C1A7', card: '#F1EEE3', line: 'rgba(30,33,22,0.18)',
