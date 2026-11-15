@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 import { housePages, pages } from './pages';
+import { checkPixelContrast } from './contrast';
 
 // WCAG 2.2 A/AA, which includes colour contrast (4.5:1 for text, 3:1 for large text).
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
@@ -11,6 +12,17 @@ async function audit(page: Page) {
     (v) => `${v.id} (${v.impact}): ${v.help}\n${v.nodes.map((n) => `  - ${n.target.join(' ')}: ${n.failureSummary?.split('\n')[1]?.trim() ?? ''}`).join('\n')}`,
   );
   expect(report, report.join('\n\n')).toEqual([]);
+
+  // Text axe could not judge (over a photo, gradient, overlap or pseudo element):
+  // measure it from the rendered pixels instead of letting it pass silently.
+  const unresolved = results.incomplete
+    .filter((r) => r.id === 'color-contrast')
+    .flatMap((r) => r.nodes)
+    .filter((n) => !n.any.some((c) => /non-text characters/.test(c.message)))
+    .map((n) => n.target.join(' '));
+  const failures = await checkPixelContrast(page, unresolved);
+  const pixelReport = failures.map((f) => `${f.target}: ${f.ratio}:1 (needs ${f.required}:1), text ${f.color}`);
+  expect(pixelReport, `Insufficient contrast measured on screen:\n${pixelReport.join('\n')}`).toEqual([]);
 }
 
 for (const { name, path } of pages) {

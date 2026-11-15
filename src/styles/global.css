@@ -328,6 +328,17 @@ html[data-home='true'] .pill {
   display: flex;
   justify-content: space-between;
   color: var(--muted);
+  transition: color 0.5s ease;
+}
+/* Dark wash at the top of the photo so the light card labels stay readable on
+   any sky (WCAG AA 4.5:1, measured on screen by tests/contrast.ts). */
+.card-preview::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 120px;
+  background: linear-gradient(rgba(14, 13, 12, 0.72), rgba(14, 13, 12, 0.5) 50%, rgba(14, 13, 12, 0));
+  pointer-events: none;
 }
 .card-bottom {
   flex: 0 0 220px;
@@ -372,6 +383,10 @@ html[data-home='true'] .pill {
   .card:focus-visible .card-preview {
     opacity: 1;
     transform: translateX(-50%);
+  }
+  .card:hover .card-meta,
+  .card:focus-visible .card-meta {
+    color: #f2efe9;
   }
   .card:hover .card-mark,
   .card:focus-visible .card-mark {
@@ -891,6 +906,7 @@ html:has(.lightbox[open]) {
   text-transform: uppercase;
 }
 .map-label-sea {
+  fill: var(--ink);
   font-family: var(--font-display);
   font-size: 20px;
   font-style: italic;
@@ -898,6 +914,7 @@ html:has(.lightbox[open]) {
   text-transform: none;
 }
 .map-label-road {
+  fill: var(--ink);
   font-size: 9px;
   letter-spacing: 0.22em;
 }
@@ -1121,6 +1138,13 @@ html:has(.lightbox[open]) {
   .card-mark {
     opacity: 0;
   }
+  .card-meta {
+    color: #f2efe9;
+  }
+  /* Top-row labels sit under the centred "Ailleurs" chip on tablet: move them down. */
+  .card:nth-child(-n + 2) .card-meta {
+    top: 64px;
+  }
 
   .hero-photo {
     height: 520px;
@@ -1156,6 +1180,9 @@ html:has(.lightbox[open]) {
   }
   .card-word {
     font-size: 32px;
+  }
+  .card:nth-child(-n + 2) .card-meta {
+    top: 24px;
   }
   .card-tagline,
   .card-meaning {

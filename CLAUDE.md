@@ -46,6 +46,7 @@ npm test         # Playwright + axe on the build (run `npm run build` first)
 ## Tests
 
 - `tests/accessibility.spec.ts`: axe-core WCAG 2.2 AA (incl. colour contrast) on every page, the home hover state and the open lightbox; links and buttons must have a visible name.
+- `tests/contrast.ts`: text axe cannot judge (over a photo, gradient, overlap or pseudo element) is measured from real pixels: text hidden, background screenshotted, 95% of pixels must meet 4.5:1 (3:1 large).
 - `tests/site.spec.ts`: no console errors or 404s, SEO metadata, image alt text, internal links/assets under the `/ailleurs-site` base path, no `[PLACEHOLDER]` left.
 - `tests/behaviour.spec.ts`: nav underline, home one-screen layout on tablet/phone, booking date rules, carousel loop, lightbox keyboard, phone booking bar.
 - Run on desktop, tablet and phone viewports. CI (`.github/workflows/ci.yml`) runs check + build + tests on every PR.
