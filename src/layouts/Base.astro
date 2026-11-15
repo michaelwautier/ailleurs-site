@@ -37,7 +37,7 @@ const { title, description = 'Quatre petites maisons à univers à La Réunion :
       function scrollToY(target: number) {
         const start = window.scrollY;
         const distance = target - start;
-        const duration = Math.min(2000, Math.max(1000, Math.abs(distance) * 0.6));
+        const duration = Math.min(1400, Math.max(700, Math.abs(distance) * 0.45));
         const t0 = performance.now();
         const step = (now: number) => {
           const t = Math.min(1, (now - t0) / duration);
@@ -60,7 +60,10 @@ const { title, description = 'Quatre petites maisons à univers à La Réunion :
           event.stopPropagation();
           history.pushState(history.state, '', link.hash);
           if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) target.scrollIntoView();
-          else scrollToY(target.getBoundingClientRect().top + window.scrollY);
+          else {
+            const margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+            scrollToY(Math.max(0, target.getBoundingClientRect().top + window.scrollY - margin));
+          }
         },
         { capture: true },
       );

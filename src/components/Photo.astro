@@ -18,10 +18,23 @@ const exists = fs.existsSync(path.join(process.cwd(), 'public', file));
 ---
 
 {
+  /* `transition:name` is only rendered when a name is given: with an undefined
+     value Astro still generates a unique view-transition-name, which lifts every
+     photo out of its container (and its overflow clip) during page transitions. */
+}
+{
   exists ? (
-    <img class:list={['photo', className]} src={withBase(file)} alt={label} loading={loading} decoding="async" transition:name={transitionName} />
-  ) : (
+    transitionName ? (
+      <img class:list={['photo', className]} src={withBase(file)} alt={label} loading={loading} decoding="async" transition:name={transitionName} />
+    ) : (
+      <img class:list={['photo', className]} src={withBase(file)} alt={label} loading={loading} decoding="async" />
+    )
+  ) : transitionName ? (
     <div class:list={['photo', 'photo-placeholder', className]} role="img" aria-label={label} transition:name={transitionName}>
+      <span>[Photo] {label}</span>
+    </div>
+  ) : (
+    <div class:list={['photo', 'photo-placeholder', className]} role="img" aria-label={label}>
       <span>[Photo] {label}</span>
     </div>
   )

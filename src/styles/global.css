@@ -20,6 +20,14 @@ html {
   color: var(--ink);
 }
 
+/* Anchor targets (Découvrir le lieu, Réserver…) stop with some air above them. */
+[id] {
+  scroll-margin-top: clamp(56px, 10vh, 112px);
+}
+#top {
+  scroll-margin-top: 0;
+}
+
 body {
   margin: 0;
   font-family: var(--font-body);
@@ -42,7 +50,7 @@ img {
 /* ---------- View transitions: soft crossfade with blur ---------- */
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 1.1s;
+  animation-duration: 0.9s;
   animation-timing-function: var(--ease-out);
 }
 ::view-transition-old(root) {
@@ -52,7 +60,7 @@ img {
   animation-name: vt-in;
 }
 ::view-transition-group(*) {
-  animation-duration: 1.2s;
+  animation-duration: 1s;
   animation-timing-function: var(--ease-in-out);
 }
 @keyframes vt-out {
