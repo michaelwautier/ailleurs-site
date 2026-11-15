@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Ailleurs: a sun setting on the horizon, seen through an open arch. -->
+  <rect width="64" height="64" fill="#1A1917"/>
+  <path d="M16 56V30a16 16 0 0 1 32 0v26z" fill="#F2EFE9"/>
+  <circle cx="32" cy="44" r="8" fill="#C8643B"/>
+  <rect x="16" y="44" width="32" height="12" fill="#F2EFE9"/>
+  <path d="M16 44.75h32" stroke="#1A1917" stroke-width="1.5"/>
+</svg>
