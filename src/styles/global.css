@@ -118,6 +118,19 @@ img {
   margin: 0 auto;
   padding: 24px var(--pad-x);
   view-transition-name: site-header;
+  transition: color 0.9s ease;
+}
+/* The header is persisted and shown live during page transitions (no crossfade
+   of snapshots), so the tab underline visibly slides; theme colours ease instead. */
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
+}
+.brand-sub,
+.pill {
+  transition: color 0.9s ease, border-color 0.9s ease;
 }
 .brand {
   display: flex;
@@ -147,9 +160,26 @@ img {
   color: var(--muted);
 }
 .tabs {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   gap: 4px 36px;
+}
+/* One underline for the whole nav, slid under the active tab by Header.astro. */
+.tabs-indicator {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 1px;
+  background-color: var(--accent);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.8s var(--ease-in-out), width 0.8s var(--ease-in-out), background-color 0.9s ease,
+    opacity 0.4s ease;
+}
+.tabs-indicator.is-visible {
+  opacity: 1;
 }
 .tab {
   display: flex;
@@ -164,7 +194,6 @@ img {
 }
 .tab[aria-current='page'] {
   color: var(--ink);
-  border-bottom-color: var(--accent);
 }
 .tab:hover {
   color: var(--ink);
