@@ -4,6 +4,7 @@ import Header from '../../components/Header.astro';
 import Photo from '../../components/Photo.astro';
 import BookingForm from '../../components/BookingForm.astro';
 import { houses, facts, nearby, nextHouse, themeStyle, type House } from '../../data/houses';
+import { withBase } from '../../lib/url';
 
 export function getStaticPaths() {
   return houses.map((house) => ({ params: { slug: house.slug }, props: { house } }));
@@ -129,7 +130,7 @@ const [hero, ...gallery] = house.photos;
     </section>
 
     <section class="section">
-      <a class="next" href={`/maisons/${next.slug}`}>
+      <a class="next" href={withBase(`/maisons/${next.slug}`)}>
         <span class="eyebrow">
           Univers suivant — {next.word}
           <span lang={next.lang} dir={next.dir} style={`font-family:${next.nativeFont}`}>{next.native}</span>

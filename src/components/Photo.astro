@@ -1,6 +1,7 @@
 ---
 import fs from 'node:fs';
 import path from 'node:path';
+import { withBase } from '../lib/url';
 
 interface Props {
   file: string;
@@ -18,7 +19,7 @@ const exists = fs.existsSync(path.join(process.cwd(), 'public', file));
 
 {
   exists ? (
-    <img class:list={['photo', className]} src={file} alt={label} loading={loading} decoding="async" transition:name={transitionName} />
+    <img class:list={['photo', className]} src={withBase(file)} alt={label} loading={loading} decoding="async" transition:name={transitionName} />
   ) : (
     <div class:list={['photo', 'photo-placeholder', className]} role="img" aria-label={label} transition:name={transitionName}>
       <span>[Photo] {label}</span>

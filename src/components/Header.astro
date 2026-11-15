@@ -1,5 +1,6 @@
 ---
 import { houses } from '../data/houses';
+import { withBase } from '../lib/url';
 
 interface Props {
   activeSlug?: string;
@@ -9,7 +10,7 @@ const { activeSlug } = Astro.props;
 ---
 
 <header class="site-header" id="top" transition:persist>
-  <a class="brand" href="/" aria-label="Accueil Ailleurs">
+  <a class="brand" href={withBase('/')} aria-label="Accueil Ailleurs">
     <span class="brand-name">Ailleurs</span>
     <span class="brand-sub">Maisons d'univers</span>
   </a>
@@ -18,7 +19,7 @@ const { activeSlug } = Astro.props;
       houses.map((house) => (
         <a
           class="tab"
-          href={`/maisons/${house.slug}`}
+          href={withBase(`/maisons/${house.slug}`)}
           aria-current={house.slug === activeSlug ? 'page' : undefined}
           aria-label={`${house.word} — ${house.meaning} (${house.tab})`}
         >
@@ -36,7 +37,7 @@ const { activeSlug } = Astro.props;
       ))
     }
   </nav>
-  <a class="pill" href={activeSlug ? '#reserver' : `/maisons/${houses[0].slug}#reserver`}>Réserver</a>
+  <a class="pill" href={activeSlug ? '#reserver' : withBase(`/maisons/${houses[0].slug}#reserver`)} data-default-href={withBase(`/maisons/${houses[0].slug}#reserver`)}>Réserver</a>
 </header>
 
 <script>
@@ -49,7 +50,7 @@ const { activeSlug } = Astro.props;
       else tab.removeAttribute('aria-current');
     });
     const pill = document.querySelector<HTMLAnchorElement>('.site-header .pill');
-    if (pill) pill.href = path.startsWith('/maisons/') ? '#reserver' : '/maisons/kumo#reserver';
+    if (pill) pill.href = path.includes('/maisons/') ? '#reserver' : (pill.dataset.defaultHref ?? '#');
   }
   document.addEventListener('astro:page-load', syncActiveTab);
 </script>

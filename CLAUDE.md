@@ -38,3 +38,9 @@ npm install
 npm run dev      # http://localhost:4321
 npm run build
 ```
+
+## Deployment
+
+- GitHub repo: `michaelwautier/ailleurs-site` (public).
+- GitHub Pages via `.github/workflows/deploy.yml` on every push to `main`: https://michaelwautier.github.io/ailleurs-site/
+- `astro.config.mjs` sets `base: '/ailleurs-site'`, so every internal link and asset path must go through `withBase()` (`src/lib/url.ts`).
