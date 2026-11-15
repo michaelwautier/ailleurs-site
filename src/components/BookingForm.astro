@@ -1,0 +1,98 @@
+---
+interface Props {
+  houseName: string;
+}
+
+const { houseName } = Astro.props;
+---
+
+<form class="booking-form" data-booking data-house={houseName} novalidate>
+  <div class="dates">
+    <label>
+      Arrivée
+      <input type="date" name="arrival" required />
+    </label>
+    <label>
+      Départ
+      <input type="date" name="departure" required />
+    </label>
+  </div>
+  <div class="guests">
+    <span data-guests-label>2 voyageurs</span>
+    <div class="guests-buttons">
+      <button type="button" data-guests="-1" aria-label="Retirer un voyageur">−</button>
+      <button type="button" data-guests="1" aria-label="Ajouter un voyageur">+</button>
+    </div>
+  </div>
+  <div class="summary">
+    <span class="muted" data-nights-label>Choisissez vos dates</span>
+    <span>[PRIX] € × <span data-nights>0</span></span>
+  </div>
+  <button type="submit" class="button button-primary button-block">Demander la réservation</button>
+  <p class="status" role="status" aria-live="polite" data-status></p>
+</form>
+
+<script>
+  // TODO: connect submission to the real booking backend / channel manager.
+  const MAX_GUESTS = 16;
+
+  function plural(n: number, word: string) {
+    return `${n} ${word}${n > 1 ? 's' : ''}`;
+  }
+
+  function formatDate(value: string) {
+    return new Date(value).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
+  }
+
+  function initBooking() {
+    document.querySelectorAll<HTMLFormElement>('[data-booking]').forEach((form) => {
+      if (form.dataset.ready) return;
+      form.dataset.ready = 'true';
+
+      const arrival = form.querySelector<HTMLInputElement>('[name="arrival"]')!;
+      const departure = form.querySelector<HTMLInputElement>('[name="departure"]')!;
+      const guestsLabel = form.querySelector<HTMLElement>('[data-guests-label]')!;
+      const nightsLabel = form.querySelector<HTMLElement>('[data-nights-label]')!;
+      const nightsValue = form.querySelector<HTMLElement>('[data-nights]')!;
+      const status = form.querySelector<HTMLElement>('[data-status]')!;
+      let guests = 2;
+
+      const nights = () => {
+        if (!arrival.value || !departure.value) return 0;
+        const diff = (new Date(departure.value).getTime() - new Date(arrival.value).getTime()) / 86_400_000;
+        return diff > 0 ? Math.round(diff) : 0;
+      };
+
+      const render = () => {
+        const n = nights();
+        guestsLabel.textContent = plural(guests, 'voyageur');
+        nightsLabel.textContent = n > 0 ? plural(n, 'nuit') : 'Choisissez vos dates';
+        nightsValue.textContent = String(n);
+        status.textContent = '';
+        departure.min = arrival.value;
+      };
+
+      form.querySelectorAll<HTMLButtonElement>('[data-guests]').forEach((button) => {
+        button.addEventListener('click', () => {
+          guests = Math.min(MAX_GUESTS, Math.max(1, guests + Number(button.dataset.guests)));
+          render();
+        });
+      });
+      arrival.addEventListener('change', render);
+      departure.addEventListener('change', render);
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const n = nights();
+        status.textContent =
+          n > 0
+            ? `Demande prête : ${form.dataset.house}, du ${formatDate(arrival.value)} au ${formatDate(departure.value)}, ${plural(guests, 'voyageur')}.`
+            : "Choisissez une date de départ après l'arrivée.";
+      });
+
+      render();
+    });
+  }
+
+  document.addEventListener('astro:page-load', initBooking);
+</script>

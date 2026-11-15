@@ -1,0 +1,55 @@
+---
+import { houses } from '../data/houses';
+
+interface Props {
+  activeSlug?: string;
+}
+
+const { activeSlug } = Astro.props;
+---
+
+<header class="site-header" id="top" transition:persist>
+  <a class="brand" href="/" aria-label="Accueil Ailleurs">
+    <span class="brand-name">Ailleurs</span>
+    <span class="brand-sub">Maisons d'univers</span>
+  </a>
+  <nav class="tabs" aria-label="Logements">
+    {
+      houses.map((house) => (
+        <a
+          class="tab"
+          href={`/maisons/${house.slug}`}
+          aria-current={house.slug === activeSlug ? 'page' : undefined}
+          aria-label={`${house.word} — ${house.meaning} (${house.tab})`}
+        >
+          <span class="tab-word">
+            <span class="tab-index">{house.index}</span>
+            {house.word}
+          </span>
+          <span class="tab-sub">
+            <span lang={house.lang} dir={house.dir} style={`font-family:${house.nativeFont}`}>
+              {house.native}
+            </span>
+            <span>· {house.meaning}</span>
+          </span>
+        </a>
+      ))
+    }
+  </nav>
+  <a class="pill" href={activeSlug ? '#reserver' : `/maisons/${houses[0].slug}#reserver`}>Réserver</a>
+</header>
+
+<script>
+  // The header persists across view transitions, so its active tab is synced manually.
+  function syncActiveTab() {
+    const path = window.location.pathname.replace(/\/$/, '');
+    document.querySelectorAll<HTMLAnchorElement>('.site-header .tab').forEach((tab) => {
+      const isActive = tab.pathname.replace(/\/$/, '') === path;
+      if (isActive) tab.setAttribute('aria-current', 'page');
+      else tab.removeAttribute('aria-current');
+    });
+    const pill = document.querySelector<HTMLAnchorElement>('.site-header .pill');
+    if (pill) pill.href = path.startsWith('/maisons/') ? '#reserver' : '/maisons/kumo#reserver';
+  }
+  document.addEventListener('astro:page-load', syncActiveTab);
+</script>

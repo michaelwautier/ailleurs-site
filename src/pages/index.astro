@@ -1,0 +1,57 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Photo from '../components/Photo.astro';
+import { houses, homeTheme, themeStyle } from '../data/houses';
+---
+
+<Base title="Ailleurs — Maisons d'univers à La Réunion" themeStyle={themeStyle(homeTheme as unknown as Record<string, string>)} scheme="light" isHome>
+  <Header />
+  <main class="home" transition:animate="fade">
+    <p class="home-brand" aria-hidden="true">Ailleurs</p>
+    <section class="cards" aria-label="Les quatre maisons">
+      {
+        houses.map((house) => (
+          <a class="card" href={`/maisons/${house.slug}`} style={themeStyle(house.theme)} aria-label={`Entrer dans ${house.name}, univers ${house.tab}`}>
+            <span class="card-top">
+              <span class="card-preview">
+                <Photo file={house.photos[0].file} label={house.photos[0].label} transitionName={`hero-${house.slug}`} loading="eager" />
+              </span>
+              <span class="card-mark" aria-hidden="true">
+                <span lang={house.lang} dir={house.dir} style={`font-family:${house.nativeFont};font-style:${house.glyphItalic ? 'italic' : 'normal'}`}>
+                  {house.native}
+                </span>
+              </span>
+              <span class="card-meta">
+                <span>{house.index}</span>
+                <span>{house.tab}</span>
+              </span>
+            </span>
+            <span class="card-bottom">
+              <span class="card-title">
+                <span class="card-word">{house.word}</span>
+                <span class="card-meaning">{house.meaning}</span>
+              </span>
+              <span class="card-more">
+                <span class="card-name">{house.name} · [N] voyageurs</span>
+                <span class="card-tagline">{house.tagline}</span>
+                <span class="card-enter">Entrer →</span>
+              </span>
+            </span>
+          </a>
+        ))
+      }
+    </section>
+    <section class="intro">
+      <h1>Quatre maisons,<br />quatre ailleurs.</h1>
+      <p>
+        Japon, Réunion, Maroc, Bali : quatre petites maisons à La Réunion, chacune avec sa terrasse, sa piscine et son
+        art de recevoir. Choisissez votre univers.
+      </p>
+    </section>
+    <footer class="footer home-footer">
+      <span class="footer-brand">Ailleurs</span>
+      <span>[EMAIL] · [TÉLÉPHONE] · [INSTAGRAM]</span>
+    </footer>
+  </main>
+</Base>

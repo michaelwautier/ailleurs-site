@@ -1,0 +1,34 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  themeStyle: string;
+  scheme: 'light' | 'dark';
+  isHome?: boolean;
+}
+
+const { title, description = 'Quatre petites maisons à univers à La Réunion : Japon, créole, Maroc, Bali.', themeStyle, scheme, isHome = false } = Astro.props;
+---
+
+<!doctype html>
+<html lang="fr" style={`${themeStyle};color-scheme:${scheme}`} data-home={isHome ? 'true' : 'false'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=Manrope:wght@400;500;600&family=Marcellus&family=Noto+Naskh+Arabic:wght@400;500&family=Noto+Sans+Balinese&family=Shippori+Mincho:wght@400;600&display=swap"
+    />
+    <ClientRouter fallback="swap" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

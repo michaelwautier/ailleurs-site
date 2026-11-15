@@ -1,0 +1,155 @@
+---
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Photo from '../../components/Photo.astro';
+import BookingForm from '../../components/BookingForm.astro';
+import { houses, facts, nearby, nextHouse, themeStyle, type House } from '../../data/houses';
+
+export function getStaticPaths() {
+  return houses.map((house) => ({ params: { slug: house.slug }, props: { house } }));
+}
+
+interface Props {
+  house: House;
+}
+
+const { house } = Astro.props;
+const next = nextHouse(house.slug);
+const [hero, ...gallery] = house.photos;
+---
+
+<Base title={`${house.name} — Ailleurs`} description={house.tagline} themeStyle={themeStyle(house.theme)} scheme={house.theme.scheme}>
+  <Header activeSlug={house.slug} />
+  <main class="house">
+    <section class="hero section">
+      <div class="hero-text">
+        <p class="eyebrow rise d1">
+          <span>{house.index} / 04 — {house.word}</span>
+          <span class="eyebrow-native" lang={house.lang} dir={house.dir} style={`font-family:${house.nativeFont}`}>{house.native}</span>
+          <span>· {house.meaning}</span>
+        </p>
+        <h1 class="display rise d2">{house.name}</h1>
+        <p class="lead rise d3">{house.tagline}</p>
+        <p class="quick-facts rise d4">
+          <span>[N] voyageurs</span><span>[N] chambres</span><span>[N] m²</span><span>[COMMUNE]</span>
+        </p>
+        <div class="actions rise d5">
+          <a class="button button-primary" href="#reserver">Réserver ce séjour</a>
+          <a class="button button-ghost" href="#lieu">Découvrir le lieu →</a>
+        </div>
+      </div>
+      <div class="hero-photo">
+        <Photo file={hero.file} label={hero.label} transitionName={`hero-${house.slug}`} loading="eager" />
+        <span class="hero-glyph" aria-hidden="true" lang={house.lang} dir={house.dir} style={`font-family:${house.nativeFont};font-style:${house.glyphItalic ? 'italic' : 'normal'}`}>
+          {house.native}
+        </span>
+        <p class="caption">{hero.label}</p>
+      </div>
+    </section>
+
+    <section class="gallery section" aria-label="Galerie">
+      {
+        gallery.map((photo, i) => (
+          <figure>
+            <Photo file={photo.file} label={photo.label} class="gallery-photo" />
+            <figcaption>
+              <span>{photo.label}</span>
+              <span>{String(i + 1).padStart(2, '0')} / {String(gallery.length).padStart(2, '0')}</span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </section>
+
+    <section id="lieu" class="split section">
+      <div class="stack">
+        <p class="eyebrow">01 — Le lieu</p>
+        <h2 class="display-2">{house.statement}</h2>
+      </div>
+      <div class="stack stack-offset">
+        <p class="body-text">{house.description}</p>
+        <dl class="facts">
+          {
+            facts.map((fact) => (
+              <div>
+                <dt>{fact.key}</dt>
+                <dd>{fact.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </section>
+
+    <section class="section stack">
+      <p class="eyebrow">02 — Équipements</p>
+      <ul class="amenities">
+        {
+          house.amenities.map((amenity, i) => (
+            <li>
+              <span class="amenity-index">{String(i + 1).padStart(2, '0')}</span>
+              <span>{amenity}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="split section">
+      <div class="map" role="img" aria-label="Carte de localisation (à intégrer)">
+        <span class="map-pin" aria-hidden="true"></span>
+        <p class="caption">[Carte interactive]</p>
+      </div>
+      <div class="stack stack-center">
+        <p class="eyebrow">03 — Localisation</p>
+        <h2 class="display-3">[Commune], La Réunion</h2>
+        <p class="body-text muted">[ADRESSE OU SECTEUR]</p>
+        <ul class="nearby">
+          {
+            nearby.map((item) => (
+              <li>
+                <span>{item.key}</span>
+                <span class="muted">{item.value}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <section id="reserver" class="section">
+      <div class="booking">
+        <div class="stack">
+          <p class="eyebrow">04 — Réserver</p>
+          <h2 class="display-2">Séjourner à {house.name}</h2>
+          <p class="body-text muted">À partir de [PRIX] € / nuit · minimum [N] nuits · jusqu'à [N] voyageurs.</p>
+        </div>
+        <BookingForm houseName={house.name} />
+      </div>
+    </section>
+
+    <section class="section">
+      <a class="next" href={`/maisons/${next.slug}`}>
+        <span class="eyebrow">
+          Univers suivant — {next.word}
+          <span lang={next.lang} dir={next.dir} style={`font-family:${next.nativeFont}`}>{next.native}</span>
+        </span>
+        <span class="next-name" style={`font-family:${next.theme.font}`}>{next.name} →</span>
+      </a>
+    </section>
+
+    <footer class="footer house-footer">
+      <span class="footer-brand">Ailleurs</span>
+      <span>[EMAIL] · [TÉLÉPHONE] · [INSTAGRAM]</span>
+      <a href="#top">Haut de page ↑</a>
+    </footer>
+
+    <div class="mobile-bar">
+      <span class="mobile-bar-text">
+        <span class="mobile-bar-name">{house.name}</span>
+        <span>[PRIX] € / nuit</span>
+      </span>
+      <a class="button button-primary" href="#reserver">Réserver</a>
+    </div>
+  </main>
+</Base>

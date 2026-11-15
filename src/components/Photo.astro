@@ -1,0 +1,27 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+
+interface Props {
+  file: string;
+  label: string;
+  class?: string;
+  transitionName?: string;
+  loading?: 'eager' | 'lazy';
+}
+
+const { file, label, class: className = '', transitionName, loading = 'lazy' } = Astro.props;
+
+// Show the real image as soon as it exists in /public, otherwise a labelled placeholder.
+const exists = fs.existsSync(path.join(process.cwd(), 'public', file));
+---
+
+{
+  exists ? (
+    <img class:list={['photo', className]} src={file} alt={label} loading={loading} decoding="async" transition:name={transitionName} />
+  ) : (
+    <div class:list={['photo', 'photo-placeholder', className]} role="img" aria-label={label} transition:name={transitionName}>
+      <span>[Photo] {label}</span>
+    </div>
+  )
+}
