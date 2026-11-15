@@ -128,7 +128,7 @@ export const houses: House[] = [
       'Kitchenette équipée', 'Climatisation', 'Linge de maison', 'Wi-Fi',
     ],
     stay: {
-      guests: 2, bedrooms: 1, bed: 'Futon 160', bathrooms: 1, surface: 32, price: 165, minNights: 2,
+      guests: 2, bedrooms: 1, bed: 'Futon 160', bathrooms: 1, surface: 32, price: 165, minNights: 1,
       commune: 'Saint-Leu', address: '12 chemin des Filaos, La Chaloupe — 97416 Saint-Leu', place: 'chaloupe',
       nearby: [
         { key: 'Lagon de Saint-Leu', value: '10 min' },
@@ -173,7 +173,7 @@ export const houses: House[] = [
       'Barbecue', 'Ventilateurs de plafond', 'Linge de maison', 'Wi-Fi',
     ],
     stay: {
-      guests: 2, bedrooms: 1, bed: 'Lit 160', bathrooms: 1, surface: 38, price: 145, minNights: 2,
+      guests: 2, bedrooms: 1, bed: 'Lit 160', bathrooms: 1, surface: 38, price: 145, minNights: 1,
       commune: 'Saint-Leu', address: '4 allée des Letchis, Piton Saint-Leu — 97424 Saint-Leu', place: 'piton',
       nearby: [
         { key: 'Lagon de Saint-Leu', value: '12 min' },
@@ -218,7 +218,7 @@ export const houses: House[] = [
       'Kitchenette équipée', 'Service à thé', 'Linge de maison', 'Wi-Fi',
     ],
     stay: {
-      guests: 2, bedrooms: 1, bed: 'Lit 160', bathrooms: 1, surface: 36, price: 155, minNights: 2,
+      guests: 2, bedrooms: 1, bed: 'Lit 160', bathrooms: 1, surface: 36, price: 155, minNights: 1,
       commune: 'Saint-Leu', address: '27 rue des Bougainvilliers — 97436 Saint-Leu', place: 'town',
       nearby: [
         { key: 'Plage et lagon de Saint-Leu', value: '4 min' },
@@ -264,7 +264,7 @@ export const houses: House[] = [
       'Ventilateurs de plafond', 'Parking privé', 'Linge de maison', 'Wi-Fi',
     ],
     stay: {
-      guests: 2, bedrooms: 1, bed: 'Lit 180', bathrooms: 1, surface: 40, price: 175, minNights: 2,
+      guests: 2, bedrooms: 1, bed: 'Lit 180', bathrooms: 1, surface: 40, price: 175, minNights: 1,
       commune: 'Saint-Leu', address: '9 chemin des Bambous, Les Colimaçons — 97436 Saint-Leu', place: 'colimacons',
       nearby: [
         { key: 'Jardin botanique de Mascarin', value: '5 min' },

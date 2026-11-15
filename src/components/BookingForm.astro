@@ -47,6 +47,16 @@ const { houseName, price, maxGuests, minNights } = Astro.props;
     return new Date(value).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
   }
 
+  // Local calendar day as YYYY-MM-DD (the format of <input type="date">).
+  function isoDay(date: Date) {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  }
+
+  function addDays(iso: string, days: number) {
+    const [y, m, d] = iso.split('-').map(Number);
+    return isoDay(new Date(y, m - 1, d + days));
+  }
+
   function initBooking() {
     document.querySelectorAll<HTMLFormElement>('[data-booking]').forEach((form) => {
       if (form.dataset.ready) return;
@@ -62,6 +72,8 @@ const { houseName, price, maxGuests, minNights } = Astro.props;
       const minNights = Number(form.dataset.minNights);
       const status = form.querySelector<HTMLElement>('[data-status]')!;
       let guests = maxGuests;
+      const today = isoDay(new Date());
+      arrival.min = today;
 
       const nights = () => {
         if (!arrival.value || !departure.value) return 0;
@@ -70,12 +82,15 @@ const { houseName, price, maxGuests, minNights } = Astro.props;
       };
 
       const render = () => {
+        // No arrival in the past, and departure at least the minimum stay after arrival.
+        if (arrival.value && arrival.value < today) arrival.value = '';
+        departure.min = addDays(arrival.value || today, minNights);
+        if (departure.value && departure.value < departure.min) departure.value = '';
         const n = nights();
         guestsLabel.textContent = plural(guests, 'voyageur');
         nightsLabel.textContent = n > 0 ? plural(n, 'nuit') : 'Choisissez vos dates';
         total.textContent = n > 0 ? `${price} € × ${n} = ${price * n} €` : `${price} € / nuit`;
         status.textContent = '';
-        departure.min = arrival.value;
       };
 
       form.querySelectorAll<HTMLButtonElement>('[data-guests]').forEach((button) => {
