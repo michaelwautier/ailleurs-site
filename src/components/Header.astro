@@ -86,9 +86,29 @@ const { activeSlug } = Astro.props;
     placeIndicator(true);
   });
 
+  // Astro keeps the header by moving its node into the new page, and moving a node
+  // cancels its running CSS transitions (the underline would jump to the end).
+  // So remember where the underline is right before the swap and resume from there.
+  let resumeFrom: { x: number; width: number } | null = null;
+  document.addEventListener('astro:before-swap', () => {
+    const indicator = document.querySelector<HTMLElement>('.tabs-indicator');
+    if (!indicator?.classList.contains('is-visible')) return;
+    const style = getComputedStyle(indicator);
+    resumeFrom = { x: new DOMMatrix(style.transform).m41, width: parseFloat(style.width) };
+  });
+
   // Then confirm against the new page once it is in (also covers back/forward).
   document.addEventListener('astro:after-swap', () => {
     syncActiveTab();
+    const indicator = document.querySelector<HTMLElement>('.tabs-indicator');
+    if (indicator && resumeFrom) {
+      indicator.style.transition = 'none';
+      indicator.style.transform = `translateX(${resumeFrom.x}px)`;
+      indicator.style.width = `${resumeFrom.width}px`;
+      void indicator.offsetWidth;
+      indicator.style.transition = '';
+    }
+    resumeFrom = null;
     placeIndicator(true);
   });
 
@@ -101,6 +121,15 @@ const { activeSlug } = Astro.props;
     // Widths change once the house fonts load, and on resize.
     document.fonts.ready.then(() => placeIndicator(false));
     const nav = document.querySelector('.site-header .tabs');
-    if (nav) new ResizeObserver(() => placeIndicator(false)).observe(nav);
+    // Only a real width change repositions without animation; anything else would
+    // cut a slide in progress short.
+    let lastWidth = 0;
+    if (nav)
+      new ResizeObserver(([entry]) => {
+        const width = Math.round(entry.contentRect.width);
+        if (width === lastWidth) return;
+        lastWidth = width;
+        placeIndicator(false);
+      }).observe(nav);
   });
 </script>
