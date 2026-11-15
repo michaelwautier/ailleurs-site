@@ -39,7 +39,17 @@ Premium booking site for four small themed holiday houses (max ~40 m² each, ter
 npm install
 npm run dev      # http://localhost:4321
 npm run build
+npm run check    # astro check (types)
+npm test         # Playwright + axe on the build (run `npm run build` first)
 ```
+
+## Tests
+
+- `tests/accessibility.spec.ts`: axe-core WCAG 2.2 AA (incl. colour contrast) on every page, the home hover state and the open lightbox; links and buttons must have a visible name.
+- `tests/site.spec.ts`: no console errors or 404s, SEO metadata, image alt text, internal links/assets under the `/ailleurs-site` base path, no `[PLACEHOLDER]` left.
+- `tests/behaviour.spec.ts`: nav underline, home one-screen layout on tablet/phone, booking date rules, carousel loop, lightbox keyboard, phone booking bar.
+- Run on desktop, tablet and phone viewports. CI (`.github/workflows/ci.yml`) runs check + build + tests on every PR.
+- Accessible names must contain the visible text (WCAG 2.5.3): don't put an `aria-label` that differs from what is shown.
 
 ## Deployment
 

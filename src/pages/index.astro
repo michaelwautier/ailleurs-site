@@ -13,7 +13,7 @@ import { withBase } from '../lib/url';
     <section class="cards" aria-label="Les quatre maisons">
       {
         houses.map((house) => (
-          <a class="card" href={withBase(`/maisons/${house.slug}`)} style={themeStyle(house.theme)} aria-label={`Entrer dans ${house.name}, univers ${house.tab}`}>
+          <a class="card" href={withBase(`/maisons/${house.slug}`)} style={themeStyle(house.theme)}>
             <span class="card-top">
               <span class="card-preview">
                 <Photo file={house.photos[0].file} label={house.photos[0].label} loading="eager" />

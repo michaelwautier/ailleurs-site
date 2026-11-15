@@ -137,9 +137,9 @@ export const houses: House[] = [
       ],
     },
     theme: {
-      bg: '#1A1917', ink: '#EFEAE0', muted: '#A8A194', accent: '#D4553F', onAccent: '#14110F',
+      bg: '#1A1917', ink: '#EFEAE0', muted: '#A8A194', accent: '#DC604A', onAccent: '#14110F',
       tone: '#272522', tone2: '#312E2A', card: '#211F1C', line: 'rgba(239,234,224,0.18)',
-      halo: 'rgba(212,85,63,0.22)', scheme: 'dark', font: "'Shippori Mincho', serif",
+      halo: 'rgba(220,96,74,0.22)', scheme: 'dark', font: "'Shippori Mincho', serif",
     },
   },
   {
