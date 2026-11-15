@@ -25,7 +25,7 @@ const { activeSlug } = Astro.props;
         >
           <span class="tab-word">
             <span class="tab-index">{house.index}</span>
-            {house.word}
+            <span style={`font-family:${house.theme.font}`}>{house.word}</span>
           </span>
           <span class="tab-sub">
             <span lang={house.lang} dir={house.dir} style={`font-family:${house.nativeFont}`}>
@@ -37,7 +37,7 @@ const { activeSlug } = Astro.props;
       ))
     }
   </nav>
-  <a class="pill" href={activeSlug ? '#reserver' : withBase(`/maisons/${houses[0].slug}#reserver`)} data-default-href={withBase(`/maisons/${houses[0].slug}#reserver`)}>Réserver</a>
+  <a class="pill" href="#reserver">Réserver</a>
 </header>
 
 <script>
@@ -49,8 +49,6 @@ const { activeSlug } = Astro.props;
       if (isActive) tab.setAttribute('aria-current', 'page');
       else tab.removeAttribute('aria-current');
     });
-    const pill = document.querySelector<HTMLAnchorElement>('.site-header .pill');
-    if (pill) pill.href = path.includes('/maisons/') ? '#reserver' : (pill.dataset.defaultHref ?? '#');
   }
   document.addEventListener('astro:page-load', syncActiveTab);
 </script>
