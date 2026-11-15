@@ -1,4 +1,5 @@
 ---
+import CalendarIcon from './CalendarIcon.astro';
 import { houses } from '../data/houses';
 import { withBase } from '../lib/url';
 
@@ -37,7 +38,7 @@ const { activeSlug } = Astro.props;
       ))
     }
   </nav>
-  <a class="pill" href="#reserver">Réserver</a>
+  <a class="pill" href="#reserver"><CalendarIcon />Réserver</a>
 </header>
 
 <script>

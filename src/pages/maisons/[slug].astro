@@ -1,4 +1,5 @@
 ---
+import CalendarIcon from '../../components/CalendarIcon.astro';
 import Base from '../../layouts/Base.astro';
 import Header from '../../components/Header.astro';
 import Photo from '../../components/Photo.astro';
@@ -39,7 +40,7 @@ const facts = houseFacts(stay);
           <span>{stay.guests} voyageurs</span><span>{stay.bedrooms} chambre</span><span>{stay.surface} m²</span><span>{stay.commune}</span>
         </p>
         <div class="actions rise d5">
-          <a class="button button-primary" href="#reserver">Réserver {house.shortName}</a>
+          <a class="button button-primary" href="#reserver"><CalendarIcon />Réserver {house.shortName}</a>
           <a class="button button-ghost" href="#lieu">Découvrir le lieu →</a>
         </div>
       </div>
@@ -135,7 +136,7 @@ const facts = houseFacts(stay);
         <span class="mobile-bar-name">{house.name}</span>
         <span>{stay.price} € / nuit</span>
       </span>
-      <a class="button button-primary" href="#reserver">Réserver</a>
+      <a class="button button-primary" href="#reserver"><CalendarIcon />Réserver</a>
     </div>
   </main>
 </Base>
