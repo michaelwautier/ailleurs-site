@@ -37,12 +37,14 @@ const { activeSlug } = Astro.props;
         </a>
       ))
     }
+    <span class="tabs-indicator" aria-hidden="true"></span>
   </nav>
   <a class="pill" href="#reserver"><CalendarIcon />Réserver</a>
 </header>
 
 <script>
-  // The header persists across view transitions, so its active tab is synced manually.
+  // The header persists across view transitions, so its active tab is synced
+  // manually, and a single underline slides from the previous tab to the new one.
   function syncActiveTab() {
     const path = window.location.pathname.replace(/\/$/, '');
     document.querySelectorAll<HTMLAnchorElement>('.site-header .tab').forEach((tab) => {
@@ -51,5 +53,54 @@ const { activeSlug } = Astro.props;
       else tab.removeAttribute('aria-current');
     });
   }
-  document.addEventListener('astro:page-load', syncActiveTab);
+
+  function placeIndicator(animate: boolean) {
+    const indicator = document.querySelector<HTMLElement>('.tabs-indicator');
+    if (!indicator) return;
+    const active = document.querySelector<HTMLElement>('.site-header .tab[aria-current="page"]');
+    if (!active) {
+      indicator.classList.remove('is-visible');
+      return;
+    }
+    // Slide only from a visible position; coming from the home page it just appears.
+    const slide = animate && indicator.classList.contains('is-visible');
+    if (!slide) indicator.style.transition = 'none';
+    indicator.style.width = `${active.offsetWidth}px`;
+    indicator.style.transform = `translateX(${active.offsetLeft}px)`;
+    indicator.classList.add('is-visible');
+    if (!slide) {
+      void indicator.offsetWidth; // apply the jump before restoring transitions
+      indicator.style.transition = '';
+    }
+  }
+
+  // Start the slide on click, while the next page loads, so the nav answers at once.
+  document.addEventListener('astro:before-preparation', (event) => {
+    const to = event.to.pathname.replace(/\/$/, '');
+    const target = Array.from(document.querySelectorAll<HTMLAnchorElement>('.site-header .tab')).find(
+      (tab) => tab.pathname.replace(/\/$/, '') === to,
+    );
+    if (!target) return;
+    document.querySelectorAll('.site-header .tab').forEach((tab) => tab.removeAttribute('aria-current'));
+    target.setAttribute('aria-current', 'page');
+    placeIndicator(true);
+  });
+
+  // Then confirm against the new page once it is in (also covers back/forward).
+  document.addEventListener('astro:after-swap', () => {
+    syncActiveTab();
+    placeIndicator(true);
+  });
+
+  let ready = false;
+  document.addEventListener('astro:page-load', () => {
+    syncActiveTab();
+    placeIndicator(ready);
+    if (ready) return;
+    ready = true;
+    // Widths change once the house fonts load, and on resize.
+    document.fonts.ready.then(() => placeIndicator(false));
+    const nav = document.querySelector('.site-header .tabs');
+    if (nav) new ResizeObserver(() => placeIndicator(false)).observe(nav);
+  });
 </script>
